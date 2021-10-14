@@ -41,11 +41,8 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         /** @var VariablesService $variablesService */
         $variablesService = resolve(VariablesServiceContract::class);
 
-        $variablesService::$tokens[ResetPasswordVariables::getType()][ResetPasswordVariables::getSubtype()] = ResetPasswordVariables::class;
-        $variablesService::$tokens[VerifyEmailVariables::getType()][VerifyEmailVariables::getSubtype()] = VerifyEmailVariables::class;
-
-        //$variablesService::addToken(ResetPasswordVariables::class, ResetPasswordVariables::getType(), ResetPasswordVariables::getSubtype());
-        //$variablesService::addToken(VerifyEmailVariables::class, VerifyEmailVariables::getType(), VerifyEmailVariables::getSubtype());
+        $variablesService::addToken(ResetPasswordVariables::class, ResetPasswordVariables::getType(), ResetPasswordVariables::getSubtype());
+        $variablesService::addToken(VerifyEmailVariables::class, VerifyEmailVariables::getType(), VerifyEmailVariables::getSubtype());
     }
 
     public function bootForConsole()
