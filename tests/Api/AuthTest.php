@@ -19,7 +19,6 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
-use InvalidArgumentException;
 
 class AuthTest extends TestCase
 {
@@ -52,6 +51,7 @@ class AuthTest extends TestCase
         ]);
 
         $user = User::where('email', 'test@test.test')->first();
+
         Notification::assertNotSentTo($user, LaravelVerifyEmail::class);
         Notification::assertSentTo($user, VerifyEmail::class);
 

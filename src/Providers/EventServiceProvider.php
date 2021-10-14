@@ -23,19 +23,12 @@ class EventServiceProvider extends \Illuminate\Foundation\Support\Providers\Even
     {
         $this->booted(function () {
             Event::forget(PasswordForgotten::class);
-
             Event::forget(Registered::class);
 
-            $events = $this->getEvents();
-
-            foreach ($events as $event => $listeners) {
+            foreach ($this->listen as $event => $listeners) {
                 foreach (array_unique($listeners) as $listener) {
                     Event::listen($event, $listener);
                 }
-            }
-
-            foreach ($this->subscribe as $subscriber) {
-                Event::subscribe($subscriber);
             }
         });
         parent::register();
