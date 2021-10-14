@@ -58,7 +58,6 @@ class AuthTest extends TestCase
         $notification = new VerifyEmail();
         $mail = $notification->toMail($user);
         $this->assertTrue($mail instanceof \Illuminate\Notifications\Messages\MailMessage);
-        var_dump($mail->toArray());
     }
 
     public function testResetPassword()
@@ -93,6 +92,5 @@ class AuthTest extends TestCase
         $notification = new ResetPassword($user->password_reset_token, $event->getReturnUrl());
         $mail = $notification->toMail($user);
         $this->assertTrue($mail instanceof \Illuminate\Notifications\Messages\MailMessage);
-        var_dump($mail->toArray());
     }
 }

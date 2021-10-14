@@ -18,7 +18,6 @@ class TestCase extends CoreTestCase
     {
         parent::setUp();
         Passport::useClientModel(Client::class);
-        //$this->seed(ReportsPermissionSeeder::class);
     }
 
     protected function getPackageProviders($app)
