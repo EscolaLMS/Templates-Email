@@ -20,8 +20,8 @@ class VerifyEmail extends LaravelVerifyEmail
 
     public function toMail($notifiable)
     {
-        $template = $this->templateRepository->findDefaultForTypeAndSubtype(VerifyEmailVariables::getType(), VerifyEmailVariables::getSubtype());
-        if ($template) {
+        $template = $this->templateRepository->findDefaultForTypeAndSubtype(VerifyEmailVariables::getType(), VerifyEmailVariables::getVarSet());
+        if ($template && $template->is_valid) {
             $vars = VerifyEmailVariables::getVariablesFromContent($notifiable, $this->verificationUrl($notifiable));
             $body = strtr($template->content, $vars);
             return (new MailMessage)

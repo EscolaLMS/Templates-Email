@@ -4,10 +4,10 @@ namespace EscolaLms\TemplatesEmail\Enums\Email;
 
 class VerifyEmailVariables extends AbstractAuthEmailVariables
 {
-    const SUBTYPE = 'verify-email';
+    const VARSET = 'verify-email';
 
-    public static function getSubtype(): string
+    public static function getVarSet(): string
     {
-        return self::SUBTYPE;
+        return self::VARSET;
     }
 }

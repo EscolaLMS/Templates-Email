@@ -21,8 +21,8 @@ class ResetPassword extends AuthResetPassword
 
     public function toMail($notifiable)
     {
-        $template = $this->templateRepository->findDefaultForTypeAndSubtype(ResetPasswordVariables::getType(), ResetPasswordVariables::getSubtype());
-        if ($template) {
+        $template = $this->templateRepository->findDefaultForTypeAndSubtype(ResetPasswordVariables::getType(), ResetPasswordVariables::getVarSet());
+        if ($template && $template->is_valid) {
             $vars = ResetPasswordVariables::getVariablesFromContent($notifiable, $this->resetUrl($notifiable));
             $body = strtr($template->content, $vars);
             return (new MailMessage)
