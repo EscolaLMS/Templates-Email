@@ -5,6 +5,7 @@ namespace EscolaLms\TemplatesEmail\Enums\Email;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Core\Enums\BasicEnum;
 use EscolaLms\Templates\Enum\Contracts\TemplateVariableContract;
+use Illuminate\Support\Str;
 
 abstract class AbstractAuthEmailVariables extends BasicEnum implements TemplateVariableContract
 {
@@ -12,37 +13,51 @@ abstract class AbstractAuthEmailVariables extends BasicEnum implements TemplateV
     const TYPE = 'email';
 
     //
-    const USER_EMAIL             = "@VarUserEmail";
-    const USER_FIRST_NAME        = "@VarStudentFirstName";
-    const USER_LAST_NAME         = "@VarStudentLastName";
-    const USER_FULL_NAME         = "@VarStudentFullName";
-    const ACTION_LINK            = "@VarActionLink";
+    const VAR_USER_EMAIL      = "@VarUserEmail";
+    const VAR_USER_FIRST_NAME = "@VarStudentFirstName";
+    const VAR_USER_LAST_NAME  = "@VarStudentLastName";
+    const VAR_USER_FULL_NAME  = "@VarStudentFullName";
+    const VAR_ACTION_LINK     = "@VarActionLink";
 
     public static function getMockVariables(): array
     {
         $faker = \Faker\Factory::create();
         return [
-            self::USER_EMAIL => $faker->email,
-            self::USER_FIRST_NAME => $faker->firstName,
-            self::USER_LAST_NAME => $faker->lastName,
-            self::USER_FULL_NAME => $faker->name,
-            self::ACTION_LINK => url('/'),
+            self::VAR_USER_EMAIL => $faker->email,
+            self::VAR_USER_FIRST_NAME => $faker->firstName,
+            self::VAR_USER_LAST_NAME => $faker->lastName,
+            self::VAR_USER_FULL_NAME => $faker->name,
+            self::VAR_ACTION_LINK => url('/'),
         ];
     }
 
     public static function getVariablesFromContent(?User $user = null, ?string $action_link = null): array
     {
         return [
-            self::USER_EMAIL => $user->email,
-            self::USER_FIRST_NAME => $user->firstName,
-            self::USER_LAST_NAME => $user->lastName,
-            self::USER_FULL_NAME => $user->name,
-            self::ACTION_LINK => $action_link,
+            self::VAR_USER_EMAIL => $user->email,
+            self::VAR_USER_FIRST_NAME => $user->firstName,
+            self::VAR_USER_LAST_NAME => $user->lastName,
+            self::VAR_USER_FULL_NAME => $user->name,
+            self::VAR_ACTION_LINK => $action_link,
         ];
+    }
+
+    public static function getRequiredVariables(): array
+    {
+        return [
+            self::VAR_ACTION_LINK,
+        ];
+    }
+
+    public static function isValid(string $content): bool
+    {
+        return Str::containsAll($content, self::getRequiredVariables());
     }
 
     public static function getType(): string
     {
         return self::TYPE;
     }
+
+    abstract public static function getVarSet(): string;
 }

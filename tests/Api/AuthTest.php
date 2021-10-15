@@ -28,9 +28,9 @@ class AuthTest extends TestCase
     {
         $template = Template::factory()->create([
             'type' => VerifyEmailVariables::getType(),
-            'vars_set' => VerifyEmailVariables::getSubtype(),
+            'vars_set' => VerifyEmailVariables::getVarSet(),
             'is_default' => true,
-            'content' => "ASDF" . PHP_EOL . VerifyEmailVariables::USER_EMAIL . PHP_EOL . VerifyEmailVariables::ACTION_LINK,
+            'content' => "ASDF" . PHP_EOL . VerifyEmailVariables::VAR_USER_EMAIL . PHP_EOL . VerifyEmailVariables::VAR_ACTION_LINK,
         ]);
 
         Notification::fake();
@@ -64,9 +64,9 @@ class AuthTest extends TestCase
     {
         $template = Template::factory()->create([
             'type' => ResetPasswordVariables::getType(),
-            'vars_set' => ResetPasswordVariables::getSubtype(),
+            'vars_set' => ResetPasswordVariables::getVarSet(),
             'is_default' => true,
-            'content' => "ASDF" . PHP_EOL . ResetPasswordVariables::USER_EMAIL . PHP_EOL . ResetPasswordVariables::ACTION_LINK,
+            'content' => "ASDF" . PHP_EOL . ResetPasswordVariables::VAR_USER_EMAIL . PHP_EOL . ResetPasswordVariables::VAR_ACTION_LINK,
         ]);
 
         Event::fake();
