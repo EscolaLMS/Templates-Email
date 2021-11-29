@@ -7,9 +7,6 @@ use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Notifications\ResetPassword as AuthResetPassword;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
-use EscolaLms\Notifications\Models\Template;
-use EscolaLms\TemplatesEmail\Enums\Email\ResetPasswordVariables;
-use EscolaLms\TemplatesEmail\Enums\Email\VerifyEmailVariables;
 use EscolaLms\TemplatesEmail\Listeners\CreatePasswordResetToken;
 use EscolaLms\TemplatesEmail\Notifications\ResetPassword;
 use EscolaLms\TemplatesEmail\Notifications\VerifyEmail;
@@ -26,13 +23,6 @@ class AuthTest extends TestCase
 
     public function testVerifyEmail()
     {
-        $template = Template::factory()->create([
-            'type' => 'mail',
-            'vars_set' => VerifyEmail::templateVariablesSetName(),
-            'is_default' => true,
-            'content' => "ASDF" . PHP_EOL . VerifyEmailVariables::VAR_USER_EMAIL . PHP_EOL . VerifyEmailVariables::VAR_ACTION_LINK,
-        ]);
-
         Notification::fake();
 
         $this->response = $this->json('POST', '/api/auth/register', [
@@ -62,13 +52,6 @@ class AuthTest extends TestCase
 
     public function testResetPassword()
     {
-        $template = Template::factory()->create([
-            'type' => 'mail',
-            'vars_set' => ResetPassword::templateVariablesSetName(),
-            'is_default' => true,
-            'content' => "ASDF" . PHP_EOL . ResetPasswordVariables::VAR_USER_EMAIL . PHP_EOL . ResetPasswordVariables::VAR_ACTION_LINK,
-        ]);
-
         Event::fake();
         Notification::fake();
 

@@ -20,7 +20,7 @@ class VerifyEmail extends LaravelVerifyEmail implements NotificationContract
     {
         $template = EscolaLmsNotifications::findTemplateForNotification($this, 'mail');
 
-        if ($template && $template->is_valid) {
+        if ($template && $template->is_valid && $template->title_is_valid) {
             return $this->toMailTrait($notifiable);
         }
 
@@ -41,7 +41,11 @@ class VerifyEmail extends LaravelVerifyEmail implements NotificationContract
 
     public static function defaultContentTemplate(): string
     {
-        return '';
+        return Lang::get('Please click the button below to verify your email address.')
+            . PHP_EOL
+            . VerifyEmailVariables::VAR_ACTION_LINK
+            . PHP_EOL
+            . Lang::get('If you did not create an account, no further action is required.');
     }
 
     public static function templateVariablesClass(): string
