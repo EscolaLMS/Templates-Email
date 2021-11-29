@@ -4,14 +4,11 @@ namespace EscolaLms\TemplatesEmail\Enums\Email;
 
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Core\Enums\BasicEnum;
-use EscolaLms\Templates\Enum\Contracts\TemplateVariableContract;
+use EscolaLms\Notifications\Core\NotificationVariableContract;
 use Illuminate\Support\Str;
 
-abstract class AbstractAuthEmailVariables extends BasicEnum implements TemplateVariableContract
+abstract class AbstractAuthEmailVariables extends BasicEnum implements NotificationVariableContract
 {
-    //
-    const TYPE = 'email';
-
     //
     const VAR_USER_EMAIL      = "@VarUserEmail";
     const VAR_USER_FIRST_NAME = "@VarStudentFirstName";
@@ -54,10 +51,13 @@ abstract class AbstractAuthEmailVariables extends BasicEnum implements TemplateV
         return Str::containsAll($content, self::getRequiredVariables());
     }
 
-    public static function getType(): string
+    public static function getRequiredTitleVariables(): array
     {
-        return self::TYPE;
+        return [];
     }
 
-    abstract public static function getVarSet(): string;
+    public static function titleIsValid(?string $title): bool
+    {
+        return !empty($title);
+    }
 }

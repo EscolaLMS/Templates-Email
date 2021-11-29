@@ -2,13 +2,8 @@
 
 namespace EscolaLms\TemplatesEmail;
 
-use EscolaLms\Templates\Services\Contracts\VariablesServiceContract;
-use EscolaLms\Templates\Services\VariablesService;
-use EscolaLms\TemplatesEmail\Enums\Email\ResetPasswordVariables;
-use EscolaLms\TemplatesEmail\Enums\Email\VerifyEmailVariables;
 use EscolaLms\TemplatesEmail\Providers\EventServiceProvider;
-use EscolaLms\TemplatesEmail\Repositories\Contracts\EmailTemplateRepositoryContract;
-use EscolaLms\TemplatesEmail\Repositories\EmailTemplateRepository;
+use EscolaLms\TemplatesEmail\Providers\NotificationServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -16,18 +11,10 @@ use Illuminate\Support\ServiceProvider;
  */
 class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 {
-    /**
-     * All of the container bindings that should be registered.
-     *
-     * @var array
-     */
-    public $bindings = [
-        EmailTemplateRepositoryContract::class => EmailTemplateRepository::class,
-    ];
-
     public function register()
     {
         $this->app->register(EventServiceProvider::class);
+        $this->app->register(NotificationServiceProvider::class);
     }
 
     public function boot()
@@ -37,12 +24,6 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
-
-        /** @var VariablesService $variablesService */
-        $variablesService = resolve(VariablesServiceContract::class);
-
-        $variablesService::addToken(ResetPasswordVariables::class, ResetPasswordVariables::getType(), ResetPasswordVariables::getVarSet());
-        $variablesService::addToken(VerifyEmailVariables::class, VerifyEmailVariables::getType(), VerifyEmailVariables::getVarSet());
     }
 
     public function bootForConsole()
