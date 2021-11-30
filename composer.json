@@ -5,8 +5,8 @@
   "require": {
     "php": ">=7.4 | >=8.0",
     "escolalms/auth": ">=0.1.44",
-    "escolalms/core": ">=0.1.6",
-    "escolalms/templates": ">=0.0",
+    "escolalms/core": ">=1.0.0",
+    "escolalms/notifications": ">=0.0.11",
     "laravel/framework": ">=8.0"
   },
   "require-dev": {

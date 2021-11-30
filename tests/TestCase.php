@@ -6,7 +6,10 @@ use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Tests\Models\Client;
 use EscolaLms\Core\Tests\TestCase as CoreTestCase;
+use EscolaLms\Notifications\EscolaLmsNotificationsServiceProvider;
+use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Database\Seeders\NotificationsSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportServiceProvider;
@@ -18,6 +21,7 @@ class TestCase extends CoreTestCase
     {
         parent::setUp();
         Passport::useClientModel(Client::class);
+        $this->seed(NotificationsSeeder::class);
     }
 
     protected function getPackageProviders($app)
@@ -27,6 +31,7 @@ class TestCase extends CoreTestCase
             PermissionServiceProvider::class,
             PassportServiceProvider::class,
             EscolaLmsAuthServiceProvider::class,
+            EscolaLmsNotificationsServiceProvider::class,
             EscolaLmsTemplatesServiceProvider::class,
             EscolaLmsTemplatesEmailServiceProvider::class,
         ];

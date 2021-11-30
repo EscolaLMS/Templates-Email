@@ -3,33 +3,55 @@
 namespace EscolaLms\TemplatesEmail\Notifications;
 
 use EscolaLms\Auth\Notifications\ResetPassword as AuthResetPassword;
+use EscolaLms\Notifications\Core\NotificationContract;
+use EscolaLms\Notifications\Core\Traits\NotificationDefaultImplementation;
+use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
 use EscolaLms\TemplatesEmail\Enums\Email\ResetPasswordVariables;
-use EscolaLms\TemplatesEmail\Repositories\Contracts\EmailTemplateRepositoryContract;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\HtmlString;
 
-class ResetPassword extends AuthResetPassword
+class ResetPassword extends AuthResetPassword implements NotificationContract
 {
-    private EmailTemplateRepositoryContract $templateRepository;
-
-    public function __construct(string $token, ?string $url)
-    {
-        parent::__construct($token, $url);
-        $this->templateRepository = app(EmailTemplateRepositoryContract::class);
+    use NotificationDefaultImplementation {
+        toMail as toMailTrait;
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
-        $template = $this->templateRepository->findDefaultForTypeAndSubtype(ResetPasswordVariables::getType(), ResetPasswordVariables::getVarSet());
-        if ($template && $template->is_valid) {
-            $vars = ResetPasswordVariables::getVariablesFromContent($notifiable, $this->resetUrl($notifiable));
-            $body = strtr($template->content, $vars);
-            return (new MailMessage)
-                ->subject(Lang::get('Reset Password Notification'))
-                ->line(new HtmlString($body));
+        $template = EscolaLmsNotifications::findTemplateForNotification($this, 'mail');
+
+        if ($template && $template->is_valid && $template->title_is_valid) {
+            return $this->toMailTrait($notifiable);
         }
 
         return parent::toMail($notifiable);
+    }
+
+    public function additionalDataForVariables($notifiable): array
+    {
+        return [
+            $this->resetUrl($notifiable),
+        ];
+    }
+
+    public static function defaultTitleTemplate(): string
+    {
+        return Lang::get('Reset Password Notification');
+    }
+
+    public static function defaultContentTemplate(): string
+    {
+        return Lang::get('You are receiving this email because we received a password reset request for your account.')
+            . PHP_EOL
+            . ResetPasswordVariables::VAR_ACTION_LINK
+            . PHP_EOL
+            . Lang::get('This password reset link will expire in :count minutes.', ['count' => ResetPasswordVariables::VAR_ACTION_LINK_EXPIRATION])
+            . PHP_EOL
+            . Lang::get('If you did not request a password reset, no further action is required.');
+    }
+
+    public static function templateVariablesClass(): string
+    {
+        return ResetPasswordVariables::class;
     }
 }

@@ -6,8 +6,6 @@ use EscolaLms\Auth\Models\User;
 
 class ResetPasswordVariables extends AbstractAuthEmailVariables
 {
-    const VARSET = 'reset-password';
-
     const VAR_ACTION_LINK_EXPIRATION = "@VarActionLinkExpiration";
 
     public static function getMockVariables(): array
@@ -22,10 +20,5 @@ class ResetPasswordVariables extends AbstractAuthEmailVariables
         return array_merge(parent::getVariablesFromContent($user, $action_link), [
             self::VAR_ACTION_LINK_EXPIRATION => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire'),
         ]);
-    }
-
-    public static function getVarSet(): string
-    {
-        return self::VARSET;
     }
 }
