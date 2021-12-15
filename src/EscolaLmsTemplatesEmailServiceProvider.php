@@ -2,8 +2,13 @@
 
 namespace EscolaLms\TemplatesEmail;
 
-use EscolaLms\TemplatesEmail\Providers\EventServiceProvider;
-use EscolaLms\TemplatesEmail\Providers\NotificationServiceProvider;
+use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
+use EscolaLms\Auth\EventServiceProvider as AuthEventServiceProvider;
+use EscolaLms\Settings\Facades\AdministrableConfig;
+use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -11,10 +16,22 @@ use Illuminate\Support\ServiceProvider;
  */
 class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 {
+    const CONFIG_KEY = 'escola_templates_email';
+
     public function register()
     {
-        $this->app->register(EventServiceProvider::class);
-        $this->app->register(NotificationServiceProvider::class);
+        $this->mergeConfigFrom(__DIR__ . '/config.php', self::CONFIG_KEY);
+
+        if (class_exists(\EscolaLms\Auth\EscolaLmsAuthServiceProvider::class)) {
+            if (!$this->app->getProviders(EscolaLmsAuthServiceProvider::class)) {
+                $this->app->register(EscolaLmsAuthServiceProvider::class);
+            }
+            $this->app->register(AuthTemplatesEventServiceProvider::class);
+            $this->app->register(AuthTemplatesServiceProvider::class);
+        }
+        if (class_exists(\EscolaLms\Courses\EscolaLmsCourseServiceProvider::class)) {
+            $this->app->register(CourseTemplatesServiceProvider::class);
+        }
     }
 
     public function boot()
@@ -24,10 +41,21 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
+
+        if (class_exists(\EscolaLms\Settings\Facades\AdministrableConfig::class)) {
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.use_api', ['required', 'bool'], false);
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_id', ['required', 'string'], false);
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_secret', ['required', 'string'], false);
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.default_template', ['required', 'string', new MjmlRule()], false);
+        }
     }
 
     public function bootForConsole()
     {
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        $this->publishes([
+            __DIR__ . '/config.php' => config_path(self::CONFIG_KEY . '.php'),
+        ], self::CONFIG_KEY . '.config');
     }
 }
