@@ -6,10 +6,11 @@ use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Tests\Models\Client;
 use EscolaLms\Core\Tests\TestCase as CoreTestCase;
-use EscolaLms\Notifications\EscolaLmsNotificationsServiceProvider;
-use EscolaLms\Notifications\Facades\EscolaLmsNotifications;
+use EscolaLms\Courses\EscolaLmsCourseServiceProvider;
+use EscolaLms\Scorm\EscolaLmsScormServiceProvider;
+use EscolaLms\Settings\EscolaLmsSettingsServiceProvider;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
-use EscolaLms\TemplatesEmail\Database\Seeders\NotificationsSeeder;
+use EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportServiceProvider;
@@ -21,25 +22,38 @@ class TestCase extends CoreTestCase
     {
         parent::setUp();
         Passport::useClientModel(Client::class);
-        $this->seed(NotificationsSeeder::class);
+        $this->seed(TemplatesEmailSeeder::class);
     }
 
     protected function getPackageProviders($app)
     {
-        return [
+        $providers = [
             ...parent::getPackageProviders($app),
             PermissionServiceProvider::class,
             PassportServiceProvider::class,
-            EscolaLmsAuthServiceProvider::class,
-            EscolaLmsNotificationsServiceProvider::class,
             EscolaLmsTemplatesServiceProvider::class,
             EscolaLmsTemplatesEmailServiceProvider::class,
         ];
+        if (class_exists(\EscolaLms\Auth\EscolaLmsAuthServiceProvider::class)) {
+            $providers[] = EscolaLmsAuthServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\Courses\EscolaLmsCourseServiceProvider::class)) {
+            $providers[] = EscolaLmsCourseServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\Scorm\EscolaLmsScormServiceProvider::class)) {
+            $providers[] = EscolaLmsScormServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\Settings\EscolaLmsSettingsServiceProvider::class)) {
+            $providers[] = EscolaLmsSettingsServiceProvider::class;
+        }
+        return $providers;
     }
 
     protected function getEnvironmentSetUp($app)
     {
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('passport.client_uuids', true);
+        $app['config']->set(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.use_api', true);
+        // Add api keys to local phpunit.xml / testbench.yaml; use github repository secrets in github actions
     }
 }
