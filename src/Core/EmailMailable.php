@@ -10,4 +10,8 @@ class EmailMailable extends Mailable
     {
         return $this->html ?? null;
     }
+
+    public function build()
+    {
+    }
 }
