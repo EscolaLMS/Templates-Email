@@ -18,6 +18,8 @@ use EscolaLms\Courses\Tests\ProgressConfigurable;
 use EscolaLms\Courses\ValueObjects\CourseProgressCollection;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
+use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
+use EscolaLms\TemplatesEmail\Services\MjmlService;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -25,6 +27,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Mockery;
+use Mockery\MockInterface;
 
 class CoursesTest extends TestCase
 {
@@ -40,6 +44,13 @@ class CoursesTest extends TestCase
         if (!class_exists(\EscolaLms\Scorm\EscolaLmsScormServiceProvider::class)) {
             $this->markTestSkipped('Scorm package not installed');
         }
+
+        $this->instance(
+            MjmlServiceContract::class,
+            Mockery::mock(MjmlService::class, function (MockInterface $mock) {
+                $mock->shouldReceive('render')->once()->andReturnArg(0);
+            })
+        );
     }
 
     public function testDeadlineNotification()
