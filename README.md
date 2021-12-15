@@ -1,6 +1,6 @@
 # Templates-Email
 
-Package for editing email templates (for now only ResetPassword and VerifyEmail notifications)
+Package for email notifiations with editable templates (for important user-related events)
 
 [![swagger](https://img.shields.io/badge/documentation-swagger-green)](https://escolalms.github.io/TemplatesEmail/)
 [![codecov](https://codecov.io/gh/EscolaLMS/TemplatesEmail/branch/main/graph/badge.svg?token=O91FHNKI6R)](https://codecov.io/gh/EscolaLMS/TemplatesEmail)
