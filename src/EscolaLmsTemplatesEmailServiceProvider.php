@@ -3,12 +3,13 @@
 namespace EscolaLms\TemplatesEmail;
 
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
-use EscolaLms\Auth\EventServiceProvider as AuthEventServiceProvider;
 use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
+use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
+use EscolaLms\TemplatesEmail\Services\MjmlService;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -17,6 +18,10 @@ use Illuminate\Support\ServiceProvider;
 class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 {
     const CONFIG_KEY = 'escola_templates_email';
+
+    public $singletons = [
+        MjmlServiceContract::class => MjmlService::class,
+    ];
 
     public function register()
     {

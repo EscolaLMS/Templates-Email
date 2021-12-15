@@ -6,7 +6,7 @@ use EscolaLms\Templates\Contracts\TemplateChannelContract;
 use EscolaLms\Templates\Core\AbstractTemplateChannelClass;
 use EscolaLms\Templates\Enums\TemplateSectionTypeEnum;
 use EscolaLms\Templates\Events\EventWrapper;
-use EscolaLms\TemplatesEmail\Services\MjmlService;
+use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use Exception;
 use HTMLPurifier_Config;
 use HTMLPurifier;
@@ -55,7 +55,7 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
 
     private static function renderMjml(string $mjml): string
     {
-        return app(MjmlService::class)->render($mjml);
+        return app(MjmlServiceContract::class)->render($mjml);
     }
 
     private static function fixHtml(string $html): string

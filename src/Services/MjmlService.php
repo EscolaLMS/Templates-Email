@@ -4,10 +4,11 @@ namespace EscolaLms\TemplatesEmail\Services;
 
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use EscolaLms\TemplatesEmail\Mjml\BinaryRenderer;
+use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use Exception;
 use Qferrer\Mjml\Renderer\ApiRenderer;
 
-class MjmlService
+class MjmlService implements MjmlServiceContract
 {
     public function render(string $mjml): string
     {
