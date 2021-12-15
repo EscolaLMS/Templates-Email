@@ -54,7 +54,6 @@ class TestCase extends CoreTestCase
         $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('passport.client_uuids', true);
         $app['config']->set(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.use_api', true);
-        $app['config']->set(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.api_id', '4dd2c787-28c3-4738-a97f-7e386e298c58');
-        $app['config']->set(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.api_secret', '93f68efd-4d4f-42d5-ad42-5bb8349a0db2');
+        // Add api keys to local phpunit.xml / testbench.yaml; use github repository secrets in github actions
     }
 }

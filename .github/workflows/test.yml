@@ -7,7 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: escolalms/php:8
-
+    env:
+      MJML_API_ID: ${{ secrets.MJML_API_ID }}
+      MJML_API_SECRET: ${{ secrets.MJML_API_SECRET }}
     services:
       mysql:
         image: mysql:5.7
@@ -43,7 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: escolalms/php:7.4
-
+    env:
+      MJML_API_ID: ${{ secrets.MJML_API_ID }}
+      MJML_API_SECRET: ${{ secrets.MJML_API_SECRET }}
     services:
       mysql:
         image: mysql:5.7
@@ -79,7 +83,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: escolalms/php:7.4
-
+    env:
+      MJML_API_ID: ${{ secrets.MJML_API_ID }}
+      MJML_API_SECRET: ${{ secrets.MJML_API_SECRET }}
     services:
       postgres:
         image: postgres:12
