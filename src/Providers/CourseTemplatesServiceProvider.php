@@ -2,10 +2,10 @@
 
 namespace EscolaLms\TemplatesEmail\Providers;
 
-use EscolaLms\Courses\Events\CourseAssigned;
-use EscolaLms\Courses\Events\CourseCompleted;
 use EscolaLms\Courses\Events\CourseUnassigned;
-use EscolaLms\Courses\Events\DeadlineIncoming;
+use EscolaLms\Courses\Events\EscolaLmsCourseAssignedTemplateEvent;
+use EscolaLms\Courses\Events\EscolaLmsCourseDeadlineSoonTemplateEvent;
+use EscolaLms\Courses\Events\EscolaLmsCourseFinishedTemplateEvent;
 use EscolaLms\Templates\Facades\Template;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Courses\DeadlineIncomingVariables;
@@ -18,9 +18,9 @@ class CourseTemplatesServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Template::register(DeadlineIncoming::class, EmailChannel::class, DeadlineIncomingVariables::class);
-        Template::register(CourseCompleted::class, EmailChannel::class, UserFinishedCourseVariables::class);
-        Template::register(CourseAssigned::class, EmailChannel::class, UserAssignedToCourseVariables::class);
+        Template::register(EscolaLmsCourseDeadlineSoonTemplateEvent::class, EmailChannel::class, DeadlineIncomingVariables::class);
+        Template::register(EscolaLmsCourseFinishedTemplateEvent::class, EmailChannel::class, UserFinishedCourseVariables::class);
+        Template::register(EscolaLmsCourseAssignedTemplateEvent::class, EmailChannel::class, UserAssignedToCourseVariables::class);
         Template::register(CourseUnassigned::class, EmailChannel::class, UserUnassignedFromCourseVariables::class);
     }
 }
