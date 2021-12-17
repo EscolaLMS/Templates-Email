@@ -3,12 +3,11 @@
 namespace EscolaLms\TemplatesEmail\Providers;
 
 use EscolaLms\Auth\Events\PasswordForgotten;
-use EscolaLms\Auth\EventServiceProvider;
 use EscolaLms\TemplatesEmail\Events\Registered as NamespacedRegisteredEvent;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
 
-class AuthTemplatesEventServiceProvider extends EventServiceProvider
+class AuthTemplatesEventServiceProvider extends \Illuminate\Foundation\Support\Providers\EventServiceProvider
 {
     public function register()
     {
