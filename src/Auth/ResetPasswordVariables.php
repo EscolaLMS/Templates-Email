@@ -5,15 +5,16 @@ namespace EscolaLms\TemplatesEmail\Auth;
 use EscolaLms\Templates\Events\EventWrapper;
 use Illuminate\Support\Str;
 use EscolaLms\Auth\Repositories\Contracts\UserRepositoryContract;
+use EscolaLms\Core\Models\User;
 use Illuminate\Support\Facades\Lang;
 
 class ResetPasswordVariables extends CommonAuthVariables
 {
     const VAR_ACTION_LINK_EXPIRATION = "@VarActionLinkExpiration";
 
-    public static function mockedVariables(): array
+    public static function mockedVariables(?User $user = null): array
     {
-        return array_merge(parent::mockedVariables(), [
+        return array_merge(parent::mockedVariables($user), [
             self::VAR_ACTION_LINK_EXPIRATION => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire'),
         ]);
     }

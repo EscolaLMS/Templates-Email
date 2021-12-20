@@ -5,7 +5,7 @@
   "require": {
     "php": "^7.4|^8.0",
     "escolalms/core": "^1.2.2",
-    "escolalms/templates": "^0.1.1",
+    "escolalms/templates": "^0.2.1",
     "ezyang/htmlpurifier": "^4.13",
     "laravel/framework": "^8.0",
     "qferr/mjml-php": "^1.1"

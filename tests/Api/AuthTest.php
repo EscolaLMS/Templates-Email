@@ -10,8 +10,6 @@ use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Events\Registered;
 use EscolaLms\TemplatesEmail\Notifications\ResetPassword;
-use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
-use EscolaLms\TemplatesEmail\Services\MjmlService;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Auth\Notifications\ResetPassword as LaravelResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -20,8 +18,6 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Mockery;
-use Mockery\MockInterface;
 
 class AuthTest extends TestCase
 {
@@ -33,13 +29,6 @@ class AuthTest extends TestCase
         if (!class_exists(\EscolaLms\Auth\EscolaLmsAuthServiceProvider::class)) {
             $this->markTestSkipped('Auth package not installed');
         }
-
-        $this->instance(
-            MjmlServiceContract::class,
-            Mockery::mock(MjmlService::class, function (MockInterface $mock) {
-                $mock->shouldReceive('render')->once()->andReturnArg(0);
-            })
-        );
     }
 
     public function testVerifyEmail()
