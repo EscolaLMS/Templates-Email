@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Courses;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\Courses\ValueObjects\CourseProgressCollection;
 use EscolaLms\Templates\Events\EventWrapper;
 
@@ -9,10 +10,10 @@ class DeadlineIncomingVariables extends CommonUserAndCourseVariables
 {
     const VAR_COURSE_DEADLINE = '@VarCourseDeadline';
 
-    public static function mockedVariables(): array
+    public static function mockedVariables(?User $user = null): array
     {
         $faker = \Faker\Factory::create();
-        return array_merge(parent::mockedVariables(), [
+        return array_merge(parent::mockedVariables($user), [
             self::VAR_COURSE_DEADLINE => $faker->date(),
         ]);
     }
@@ -54,7 +55,7 @@ class DeadlineIncomingVariables extends CommonUserAndCourseVariables
                 'user_name' => self::VAR_USER_NAME,
                 'course' => self::VAR_COURSE_TITLE,
                 'deadline' => self::VAR_COURSE_DEADLINE
-            ]), ),
+            ]),),
         ];
     }
 }

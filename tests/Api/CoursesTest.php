@@ -5,10 +5,10 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 use EscolaLms\Core\Models\User as CoreUser;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
-use EscolaLms\Courses\Events\CourseUnassigned;
 use EscolaLms\Courses\Events\EscolaLmsCourseAssignedTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseDeadlineSoonTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseFinishedTemplateEvent;
+use EscolaLms\Courses\Events\EscolaLmsCourseUnassignedTemplateEvent;
 use EscolaLms\Courses\Jobs\CheckForDeadlines;
 use EscolaLms\Courses\Models\Course;
 use EscolaLms\Courses\Models\Lesson;
@@ -18,8 +18,6 @@ use EscolaLms\Courses\Tests\ProgressConfigurable;
 use EscolaLms\Courses\ValueObjects\CourseProgressCollection;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
-use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
-use EscolaLms\TemplatesEmail\Services\MjmlService;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -27,8 +25,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Mockery;
-use Mockery\MockInterface;
 
 class CoursesTest extends TestCase
 {
@@ -44,13 +40,6 @@ class CoursesTest extends TestCase
         if (!class_exists(\EscolaLms\Scorm\EscolaLmsScormServiceProvider::class)) {
             $this->markTestSkipped('Scorm package not installed');
         }
-
-        $this->instance(
-            MjmlServiceContract::class,
-            Mockery::mock(MjmlService::class, function (MockInterface $mock) {
-                $mock->shouldReceive('render')->once()->andReturnArg(0);
-            })
-        );
     }
 
     public function testDeadlineNotification()
@@ -148,12 +137,12 @@ class CoursesTest extends TestCase
         $this->response->assertOk();
 
         $user = CoreUser::find($student->getKey());
-        Event::assertDispatched(CourseUnassigned::class, function (CourseUnassigned $event) use ($user, $course) {
+        Event::assertDispatched(EscolaLmsCourseUnassignedTemplateEvent::class, function (EscolaLmsCourseUnassignedTemplateEvent $event) use ($user, $course) {
             return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
         });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new CourseUnassigned($user, $course));
+        $listener->handle(new EscolaLmsCourseUnassignedTemplateEvent($user, $course));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user, $course) {
             $this->assertEquals(__('You have been unassigned from ":course"', ['course' => $course->title]), $mailable->subject);

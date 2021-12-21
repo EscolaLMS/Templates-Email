@@ -2,15 +2,19 @@
 
 namespace EscolaLms\TemplatesEmail\Core;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Contracts\TemplateChannelContract;
 use EscolaLms\Templates\Core\AbstractTemplateChannelClass;
+use EscolaLms\Templates\Core\TemplateSectionSchema;
 use EscolaLms\Templates\Enums\TemplateSectionTypeEnum;
 use EscolaLms\Templates\Events\EventWrapper;
+use EscolaLms\Templates\Models\Template;
+use EscolaLms\Templates\Models\TemplateSection;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
-use Exception;
 use HTMLPurifier_Config;
 use HTMLPurifier;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -22,35 +26,26 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
             return false;
         }
 
-        $data = self::preview($event, $sections);
-
         $mailable = new EmailMailable();
-        $mailable->to($data['to']);
-        $mailable->subject($data['subject']);
-        $mailable->html($data['html']);
+        $mailable->to($event->getUser()->email);
+        $mailable->subject($sections['title']);
+        $mailable->html($sections['contentHtml']);
 
         Mail::send($mailable);
 
         return true;
     }
 
-    public static function preview(EventWrapper $event, array $sections): array
+    public static function preview(User $user, array $sections): bool
     {
-        if (!Arr::has($sections, self::sectionsRequired())) {
-            throw new Exception('Missing sections');
-        }
+        $mailable = new EmailMailable();
+        $mailable->to($user->email);
+        $mailable->subject($sections['title']);
+        $mailable->html($sections['contentHtml']);
 
-        if (Str::contains($sections['content'], '<mjml>')) {
-            $html = self::renderMjml($sections['content']);
-        } else {
-            $html = self::fixHtml($sections['content']);
-        }
+        Mail::send($mailable);
 
-        return [
-            'to' => $event->getUser()->email,
-            'subject' => trim($sections['title']),
-            'html' => $html,
-        ];
+        return true;
     }
 
     private static function renderMjml(string $mjml): string
@@ -65,16 +60,27 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
         return $purifier->purify($html);
     }
 
-    public static function sections(): array
+    public static function sections(): Collection
     {
-        return [
-            'title'   => TemplateSectionTypeEnum::SECTION_TEXT,
-            'content' => TemplateSectionTypeEnum::SECTION_HTML,
-        ];
+        return new Collection([
+            new TemplateSectionSchema('title', TemplateSectionTypeEnum::SECTION_TEXT(), true),
+            new TemplateSectionSchema('content', TemplateSectionTypeEnum::SECTION_MJML(), true),
+            new TemplateSectionSchema('contentHtml', TemplateSectionTypeEnum::SECTION_HTML(), false, true),
+        ]);
     }
 
-    public static function sectionsRequired(): array
+    public static function processTemplateAfterSaving(Template $template): Template
     {
-        return ['title', 'content'];
+        $content = $template->sections()->where('key', 'content')->first()->content;
+
+        if (Str::contains($content, '<mjml>')) {
+            $contentHtml = self::renderMjml($content);
+        } else {
+            $contentHtml = self::fixHtml($content);
+            TemplateSection::updateOrCreate(['template_id' => $template->getKey(), 'key' => 'content'], ['content' => $content]);
+        }
+        TemplateSection::updateOrCreate(['template_id' => $template->getKey(), 'key' => 'contentHtml'], ['content' => $contentHtml]);
+
+        return $template->refresh();
     }
 }

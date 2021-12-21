@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Courses;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\Courses\Models\Course;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
@@ -11,7 +12,7 @@ abstract class CommonUserAndCourseVariables extends EmailVariables
     const VAR_USER_NAME       = '@VarUserName';
     const VAR_COURSE_TITLE    = '@VarCourseTitle';
 
-    public static function mockedVariables(): array
+    public static function mockedVariables(?User $user = null): array
     {
         $faker = \Faker\Factory::create();
         return array_merge(parent::mockedVariables(), [

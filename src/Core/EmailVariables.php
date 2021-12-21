@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Core;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Contracts\TemplateVariableContract;
 use EscolaLms\Templates\Core\AbstractTemplateVariableClass;
 use EscolaLms\Templates\Events\EventWrapper;
@@ -12,7 +13,7 @@ abstract class EmailVariables extends AbstractTemplateVariableClass implements T
 {
     const VAR_APP_NAME       = '@VarAppName';
 
-    public static function mockedVariables(): array
+    public static function mockedVariables(?User $user = null): array
     {
         return [
             self::VAR_APP_NAME => config('app.name')
