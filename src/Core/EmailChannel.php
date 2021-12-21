@@ -15,6 +15,7 @@ use HTMLPurifier_Config;
 use HTMLPurifier;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -22,7 +23,7 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
 {
     public static function send(EventWrapper $event, array $sections): bool
     {
-        if (!Arr::has($sections, self::sectionsRequired())) {
+        if (!Arr::has($sections, self::sectionsRequired()) || !array_key_exists('contentHtml', $sections)) {
             return false;
         }
 
@@ -38,6 +39,11 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
 
     public static function preview(User $user, array $sections): bool
     {
+        if (!Arr::has($sections, self::sectionsRequired()) || !array_key_exists('contentHtml', $sections)) {
+            Log::error('Missing email sections in preview', $sections);
+            return false;
+        }
+
         $mailable = new EmailMailable();
         $mailable->to($user->email);
         $mailable->subject($sections['title']);
