@@ -10,7 +10,6 @@ use EscolaLms\Templates\Enums\TemplateSectionTypeEnum;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\Templates\Models\Template;
 use EscolaLms\Templates\Models\TemplateSection;
-use EscolaLms\Templates\Services\Contracts\TemplateServiceContract;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use HTMLPurifier_Config;
 use HTMLPurifier;
