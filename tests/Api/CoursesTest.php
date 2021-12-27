@@ -49,7 +49,7 @@ class CoursesTest extends TestCase
         Mail::fake();
 
         $user = User::factory()->create();
-        $course = Course::factory()->create(['active' => true, 'active_to' => Carbon::now()->addHour()]);
+        $course = Course::factory()->create(['active' => true, 'active_to' => Carbon::now()->addDays(config('escolalms_courses.reminder_of_deadline_count_days'))]);
         $lesson = Lesson::factory()->create([
             'course_id' => $course->getKey()
         ]);
