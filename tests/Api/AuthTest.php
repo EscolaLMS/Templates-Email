@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
+use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Events\EscolaLmsAccountMustBeEnableByAdminTemplateEvent;
 use EscolaLms\Auth\Events\EscolaLmsAccountRegisteredTemplateEvent;
@@ -104,6 +105,7 @@ class AuthTest extends TestCase
 
     public function testAccountMustBeEnableByAdmin(): void
     {
+        $this->seed(AuthPermissionSeeder::class);
         Mail::fake();
         Event::fake([EscolaLmsAccountMustBeEnableByAdminTemplateEvent::class]);
         Notification::fake();
