@@ -11,6 +11,10 @@ use EscolaLms\Courses\Events\EscolaLmsCourseFinishedTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseStartedTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseUnassignedTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsTopicFinishedTemplateEvent;
+use EscolaLms\Payments\Events\EscolaLmsPaymentCancelledTemplateEvent;
+use EscolaLms\Payments\Events\EscolaLmsPaymentFailedTemplateEvent;
+use EscolaLms\Payments\Events\EscolaLmsPaymentRegisteredTemplateEvent;
+use EscolaLms\Payments\Events\EscolaLmsPaymentSuccessTemplateEvent;
 use EscolaLms\Templates\Facades\Template;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Courses\AccessFinishedCourseVariables;
@@ -22,56 +26,35 @@ use EscolaLms\TemplatesEmail\Courses\TopicFinishedCourseVariables;
 use EscolaLms\TemplatesEmail\Courses\UserAssignedToCourseVariables;
 use EscolaLms\TemplatesEmail\Courses\UserFinishedCourseVariables;
 use EscolaLms\TemplatesEmail\Courses\UserUnassignedFromCourseVariables;
+use EscolaLms\TemplatesEmail\Payments\PaymentCanceledVariables;
+use EscolaLms\TemplatesEmail\Payments\PaymentFailedVariables;
+use EscolaLms\TemplatesEmail\Payments\PaymentRegisteredVariables;
+use EscolaLms\TemplatesEmail\Payments\PaymentSuccessVariables;
 use Illuminate\Support\ServiceProvider;
 
-class CourseTemplatesServiceProvider extends ServiceProvider
+class PaymentsTemplatesServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         Template::register(
-            EscolaLmsCourseDeadlineSoonTemplateEvent::class,
+            EscolaLmsPaymentRegisteredTemplateEvent::class,
             EmailChannel::class,
-            DeadlineIncomingVariables::class
+            PaymentRegisteredVariables::class
         );
         Template::register(
-            EscolaLmsCourseFinishedTemplateEvent::class,
+            EscolaLmsPaymentFailedTemplateEvent::class,
             EmailChannel::class,
-            UserFinishedCourseVariables::class
+            PaymentFailedVariables::class
         );
         Template::register(
-            EscolaLmsCourseAssignedTemplateEvent::class,
+            EscolaLmsPaymentSuccessTemplateEvent::class,
             EmailChannel::class,
-            UserAssignedToCourseVariables::class
+            PaymentSuccessVariables::class
         );
         Template::register(
-            EscolaLmsCourseUnassignedTemplateEvent::class,
+            EscolaLmsPaymentCancelledTemplateEvent::class,
             EmailChannel::class,
-            UserUnassignedFromCourseVariables::class
-        );
-        Template::register(
-            EscolaLmsCoursedPublishedTemplateEvent::class,
-            EmailChannel::class,
-            PublishedCourseVariables::class
-        );
-        Template::register(
-            EscolaLmsCourseStartedTemplateEvent::class,
-            EmailChannel::class,
-            StartedCourseVariables::class
-        );
-        Template::register(
-            EscolaLmsCourseAccessStartedTemplateEvent::class,
-            EmailChannel::class,
-            AccessStartedCourseVariables::class
-        );
-        Template::register(
-            EscolaLmsCourseAccessFinishedTemplateEvent::class,
-            EmailChannel::class,
-            AccessFinishedCourseVariables::class
-        );
-        Template::register(
-            EscolaLmsTopicFinishedTemplateEvent::class,
-            EmailChannel::class,
-            TopicFinishedCourseVariables::class
+            PaymentCanceledVariables::class
         );
     }
 }
