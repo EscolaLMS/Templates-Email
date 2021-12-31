@@ -2,14 +2,13 @@
 
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
-use EscolaLms\Auth\Events\PasswordForgotten;
+use EscolaLms\Auth\Events\EscolaLmsAccountRegisteredTemplateEvent;
+use EscolaLms\Auth\Events\EscolaLmsForgotPasswordTemplateEvent;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
-use EscolaLms\TemplatesEmail\Events\Registered;
-use EscolaLms\TemplatesEmail\Notifications\ResetPassword;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Auth\Notifications\ResetPassword as LaravelResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -34,7 +33,7 @@ class AuthTest extends TestCase
     public function testVerifyEmail()
     {
         Mail::fake();
-        Event::fake([Registered::class]);
+        Event::fake([EscolaLmsAccountRegisteredTemplateEvent::class]);
         Notification::fake();
 
         $this->response = $this->json('POST', '/api/auth/register', [
@@ -54,11 +53,11 @@ class AuthTest extends TestCase
 
         $user = User::where('email', 'test@test.test')->first();
 
-        Event::assertDispatched(Registered::class);
+        Event::assertDispatched(EscolaLmsAccountRegisteredTemplateEvent::class);
         Notification::assertNotSentTo($user, VerifyEmail::class);
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new Registered($user));
+        $listener->handle(new EscolaLmsAccountRegisteredTemplateEvent($user));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user) {
             $this->assertEquals('Verify Email Address', $mailable->subject);
@@ -82,11 +81,11 @@ class AuthTest extends TestCase
 
         $this->assertApiSuccess();
 
-        Event::assertDispatched(PasswordForgotten::class);
-        Notification::assertNotSentTo($user, ResetPassword::class);
+        Event::assertDispatched(EscolaLmsForgotPasswordTemplateEvent::class);
+        Notification::assertNotSentTo($user, EscolaLmsForgotPasswordTemplateEvent::class);
         Notification::assertNotSentTo($user, LaravelResetPassword::class);
 
-        $event = new PasswordForgotten($user, 'http://localhost/password-forgot');
+        $event = new EscolaLmsForgotPasswordTemplateEvent($user, 'http://localhost/password-forgot');
         $listener = app(TemplateEventListener::class);
         $listener->handle($event);
 
