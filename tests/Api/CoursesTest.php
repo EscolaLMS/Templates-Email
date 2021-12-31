@@ -184,11 +184,9 @@ class CoursesTest extends TestCase
 
         $user = CoreUser::find($student->getKey());
 
-        // TODO: this event is not dispatched anywhere in Courses package, uncomment when it's fixed
-        //Event::assertDispatched(EscolaLmsCourseFinishedTemplateEvent::class);
-        //Event::assertDispatched(EscolaLmsCourseFinishedTemplateEvent::class, function (EscolaLmsCourseFinishedTemplateEvent $event) use ($user, $course) {
-        //    return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
-        //});
+        Event::assertDispatched(EscolaLmsCourseFinishedTemplateEvent::class, function (EscolaLmsCourseFinishedTemplateEvent $event) use ($user, $course) {
+            return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
+        });
 
         $listener = app(TemplateEventListener::class);
         $listener->handle(new EscolaLmsCourseFinishedTemplateEvent($user, $course));
