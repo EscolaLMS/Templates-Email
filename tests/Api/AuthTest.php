@@ -2,6 +2,9 @@
 
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
+use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
+use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
+use EscolaLms\Auth\Events\EscolaLmsAccountMustBeEnableByAdminTemplateEvent;
 use EscolaLms\Auth\Events\EscolaLmsAccountRegisteredTemplateEvent;
 use EscolaLms\Auth\Events\EscolaLmsForgotPasswordTemplateEvent;
 use EscolaLms\Core\Models\User;
@@ -14,6 +17,7 @@ use Illuminate\Auth\Notifications\ResetPassword as LaravelResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
@@ -95,6 +99,50 @@ class AuthTest extends TestCase
             $this->assertStringContainsString('http://localhost/password-forgot', $mailable->getHtml());
             $this->assertStringContainsString('token=' . $user->password_reset_token, $mailable->getHtml());
             $this->assertStringContainsString('email=' . $user->email, $mailable->getHtml());
+            return true;
+        });
+    }
+
+    public function testAccountMustBeEnableByAdmin(): void
+    {
+        $this->seed(AuthPermissionSeeder::class);
+        Mail::fake();
+        Event::fake([EscolaLmsAccountMustBeEnableByAdminTemplateEvent::class]);
+        Notification::fake();
+        Config::set(EscolaLmsAuthServiceProvider::CONFIG_KEY  . '.account_must_be_enabled_by_admin', true);
+
+        $admin = config('auth.providers.users.model')::factory()->create();
+        $admin->guard_name = 'api';
+        $admin->assignRole('admin');
+
+        $this->response = $this->json('POST', '/api/auth/register', [
+            'email' => 'test@test.test',
+            'first_name' => 'tester',
+            'last_name' => 'tester',
+            'password' => 'testtest',
+            'password_confirmation' => 'testtest',
+        ]);
+
+        $this->assertApiSuccess();
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@test.test',
+            'first_name' => 'tester',
+            'last_name' => 'tester',
+        ]);
+
+        $newUser = User::where('email', 'test@test.test')->first();
+
+        Event::assertDispatched(EscolaLmsAccountMustBeEnableByAdminTemplateEvent::class);
+        Notification::assertNotSentTo($newUser, VerifyEmail::class);
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new EscolaLmsAccountMustBeEnableByAdminTemplateEvent($admin, $newUser));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($admin, $newUser) {
+            $this->assertEquals('Verify User account', $mailable->subject);
+            $this->assertTrue($mailable->hasTo($admin->email));
+            $this->assertFalse($mailable->hasTo($newUser->email));
+
             return true;
         });
     }
