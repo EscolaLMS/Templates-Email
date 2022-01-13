@@ -7,6 +7,7 @@ use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
@@ -36,6 +37,9 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
         if (class_exists(\EscolaLms\Courses\EscolaLmsCourseServiceProvider::class)) {
             $this->app->register(CourseTemplatesServiceProvider::class);
+        }
+        if (class_exists(\EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider::class)) {
+            $this->app->register(CsvUsersTemplatesServiceProvider::class);
         }
     }
 
