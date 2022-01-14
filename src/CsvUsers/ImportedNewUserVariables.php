@@ -5,7 +5,7 @@ namespace EscolaLms\TemplatesEmail\CsvUsers;
 use EscolaLms\TemplatesEmail\Auth\ResetPasswordVariables;
 use Illuminate\Support\Facades\Lang;
 
-class NewUserImportedVariables extends ResetPasswordVariables
+class ImportedNewUserVariables extends ResetPasswordVariables
 {
     public static function defaultSectionsContent(): array
     {

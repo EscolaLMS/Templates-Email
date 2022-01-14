@@ -1,23 +1,21 @@
 <?php
 
-namespace EscolaLms\TemplatesEmail\Tests\Api;
+namespace EscolaLms\TemplatesEmail\Tests\Services;
 
-use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
-use EscolaLms\CsvUsers\Events\EscolaLmsNewUserImportedTemplateEvent;
+use EscolaLms\CsvUsers\Events\EscolaLmsImportedNewUserTemplateEvent;
 use EscolaLms\CsvUsers\Services\Contracts\CsvUserServiceContract;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
 class CsvUsersTest extends TestCase
 {
-    use CreatesUsers, ApiTestTrait, WithoutMiddleware, DatabaseTransactions;
+    use CreatesUsers, DatabaseTransactions;
 
     public function setUp(): void
     {
@@ -40,21 +38,22 @@ class CsvUsersTest extends TestCase
         ]);
 
         $service = app(CsvUserServiceContract::class);
-        $user = $service->saveUserFromImport($userToImport);
+        $user = $service->saveUserFromImport($userToImport, 'http://localhost/set-password');
 
-        Event::assertDispatched(EscolaLmsNewUserImportedTemplateEvent::class,
-            function (EscolaLmsNewUserImportedTemplateEvent $event) use ($userToImport) {
-                return $event->getUser() === $userToImport['email'];
+        Event::assertDispatched(EscolaLmsImportedNewUserTemplateEvent::class,
+            function (EscolaLmsImportedNewUserTemplateEvent $event) use ($userToImport) {
+                return $event->getUser()->email === $userToImport['email'];
             });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsNewUserImportedTemplateEvent($user));
+        $listener->handle(new EscolaLmsImportedNewUserTemplateEvent($user,'http://localhost/set-password'));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user) {
             $this->assertEquals('User Import Notification', $mailable->subject);
             $this->assertTrue($mailable->hasTo($user->email));
             $this->assertStringContainsString('token=' . $user->password_reset_token, $mailable->getHtml());
             $this->assertStringContainsString('email=' . $user->email, $mailable->getHtml());
+            $this->assertStringContainsString('http://localhost/set-password', $mailable->getHtml());
             return true;
         });
     }
