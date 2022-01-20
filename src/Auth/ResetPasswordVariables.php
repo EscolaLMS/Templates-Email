@@ -31,9 +31,8 @@ class ResetPasswordVariables extends CommonAuthVariables
         $notifiable = $event->getUser();
 
         $token = Str::random(32);
-
         app(UserRepositoryContract::class)->update([
-            'password_reset_token' => Str::random(32),
+            'password_reset_token' => $token,
         ], $notifiable->getKey());
 
         try {
