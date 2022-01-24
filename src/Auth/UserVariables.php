@@ -27,12 +27,12 @@ abstract class UserVariables extends EmailVariables
     public static function variablesFromEvent(EventWrapper $event): array
     {
         $user = $event->getUser();
-        return [
+        return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_EMAIL => $user->email,
             self::VAR_USER_FIRST_NAME => $user->firstName,
             self::VAR_USER_LAST_NAME => $user->lastName,
             self::VAR_USER_FULL_NAME => $user->name,
-        ];
+        ]);
     }
 
     public static function requiredVariables(): array
