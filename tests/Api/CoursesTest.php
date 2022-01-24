@@ -5,6 +5,7 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 use EscolaLms\Core\Models\User as CoreUser;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
+use EscolaLms\Courses\Enum\CourseStatusEnum;
 use EscolaLms\Courses\Events\EscolaLmsCourseAssignedTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseDeadlineSoonTemplateEvent;
 use EscolaLms\Courses\Events\EscolaLmsCourseFinishedTemplateEvent;
@@ -49,7 +50,7 @@ class CoursesTest extends TestCase
         Mail::fake();
 
         $user = User::factory()->create();
-        $course = Course::factory()->create(['active' => true, 'active_to' => Carbon::now()->addDays(config('escolalms_courses.reminder_of_deadline_count_days'))]);
+        $course = Course::factory()->create(['status' => CourseStatusEnum::PUBLISHED, 'active_to' => Carbon::now()->addDays(config('escolalms_courses.reminder_of_deadline_count_days'))]);
         $lesson = Lesson::factory()->create([
             'course_id' => $course->getKey()
         ]);
@@ -88,7 +89,7 @@ class CoursesTest extends TestCase
         $course = Course::factory()->create([
             'author_id' => $admin->id,
             'base_price' => 1337,
-            'active' => true
+            'status' => CourseStatusEnum::PUBLISHED
         ]);
 
         $student = User::factory()->create();
@@ -125,7 +126,7 @@ class CoursesTest extends TestCase
         $course = Course::factory()->create([
             'author_id' => $admin->id,
             'base_price' => 1337,
-            'active' => true
+            'status' => CourseStatusEnum::PUBLISHED
         ]);
         $student = User::factory()->create();
         $student->courses()->save($course);
@@ -157,7 +158,7 @@ class CoursesTest extends TestCase
         Event::fake();
         Mail::fake();
 
-        $course = Course::factory()->create(['active' => true]);
+        $course = Course::factory()->create(['status' => CourseStatusEnum::PUBLISHED]);
         $lesson = Lesson::factory([
             'course_id' => $course->getKey()
         ])->create();
