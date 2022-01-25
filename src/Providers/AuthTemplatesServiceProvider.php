@@ -16,8 +16,6 @@ use EscolaLms\TemplatesEmail\Auth\AccountConfirmedVariables;
 use EscolaLms\TemplatesEmail\Auth\PasswordChangedVariables;
 use EscolaLms\Auth\Events\AccountBlocked;
 use EscolaLms\Auth\Events\AccountDeleted;
-use EscolaLms\Auth\Events\AccountMustBeEnableByAdmin;
-use EscolaLms\Templates\Facades\Template;
 use EscolaLms\TemplatesEmail\Auth\AccountBlockedVariables;
 use EscolaLms\TemplatesEmail\Auth\AccountDeletedVariables;
 use EscolaLms\TemplatesEmail\Auth\ResetPasswordVariables;
