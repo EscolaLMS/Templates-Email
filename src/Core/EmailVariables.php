@@ -5,26 +5,21 @@ namespace EscolaLms\TemplatesEmail\Core;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Contracts\TemplateVariableContract;
 use EscolaLms\Templates\Core\AbstractTemplateVariableClass;
+use EscolaLms\Templates\Core\SettingsVariables;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use Illuminate\Support\Str;
 
 abstract class EmailVariables extends AbstractTemplateVariableClass implements TemplateVariableContract
 {
-    const VAR_APP_NAME       = '@VarAppName';
-
     public static function mockedVariables(?User $user = null): array
     {
-        return [
-            self::VAR_APP_NAME => config('app.name')
-        ];
+        return SettingsVariables::getSettingsValues();
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        return [
-            self::VAR_APP_NAME => config('app.name')
-        ];
+        return SettingsVariables::getSettingsValues();
     }
 
     public static function requiredSections(): array
@@ -43,13 +38,6 @@ abstract class EmailVariables extends AbstractTemplateVariableClass implements T
             <<<MJML_TEMPLATE
             <mjml>
             <mj-body>
-                <mj-section background-color="#f0f0f0">
-                    <mj-column>
-                        <mj-text font-size="20px" color="#626262">
-                            @VarAppName
-                        </mj-text>
-                    </mj-column>
-                </mj-section>
                 <mj-section background-color="white">
                     <mj-column>
                         @VarTemplateContent

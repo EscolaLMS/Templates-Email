@@ -3,6 +3,7 @@
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
+use EscolaLms\Auth\Enums\SettingStatusEnum;
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Events\EscolaLmsAccountMustBeEnableByAdminTemplateEvent;
 use EscolaLms\Auth\Events\EscolaLmsAccountRegisteredTemplateEvent;
@@ -109,7 +110,7 @@ class AuthTest extends TestCase
         Mail::fake();
         Event::fake([EscolaLmsAccountMustBeEnableByAdminTemplateEvent::class]);
         Notification::fake();
-        Config::set(EscolaLmsAuthServiceProvider::CONFIG_KEY  . '.account_must_be_enabled_by_admin', true);
+        Config::set(EscolaLmsAuthServiceProvider::CONFIG_KEY  . '.account_must_be_enabled_by_admin', SettingStatusEnum::ENABLED);
 
         $admin = config('auth.providers.users.model')::factory()->create();
         $admin->guard_name = 'api';

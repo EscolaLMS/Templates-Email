@@ -12,13 +12,6 @@ return [
         'default_template' => <<<MJML_TEMPLATE
                                 <mjml>
                                 <mj-body>
-                                    <mj-section background-color="#f0f0f0">
-                                        <mj-column>
-                                            <mj-text font-size="20px" color="#626262">
-                                                @VarAppName
-                                            </mj-text>
-                                        </mj-column>
-                                    </mj-section>
                                     <mj-section background-color="white">
                                         <mj-column>
                                             @VarTemplateContent
