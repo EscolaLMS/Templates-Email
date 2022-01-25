@@ -14,6 +14,9 @@ class ResetPasswordVariable extends CommonAuthVariables
 
     public static function defaultSectionsContent(): array
     {
-        return [];
+        return [
+            'title' => '',
+            'content' => ''
+        ];
     }
 }

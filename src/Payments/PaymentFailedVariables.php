@@ -22,6 +22,9 @@ class PaymentFailedVariables extends PaymentsVariables
 
     public static function defaultSectionsContent(): array
     {
-        return [];
+        return [
+            'title' => '',
+            'content' => ''
+        ];
     }
 }

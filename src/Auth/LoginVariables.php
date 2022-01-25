@@ -3,6 +3,7 @@
 namespace EscolaLms\TemplatesEmail\Auth;
 
 use EscolaLms\Templates\Events\EventWrapper;
+use Illuminate\Support\Facades\Lang;
 
 class LoginVariables extends CommonAuthVariables
 {
@@ -14,6 +15,9 @@ class LoginVariables extends CommonAuthVariables
 
     public static function defaultSectionsContent(): array
     {
-        return [];
+        return [
+            'title' => '',
+            'content' => ''
+        ];
     }
 }

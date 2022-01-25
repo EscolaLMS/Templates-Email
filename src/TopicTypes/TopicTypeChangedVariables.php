@@ -22,6 +22,9 @@ class TopicTypeChangedVariables extends TopicTypeVariables
 
     public static function defaultSectionsContent(): array
     {
-        return [];
+        return [
+            'title' => '',
+            'content' => ''
+        ];
     }
 }

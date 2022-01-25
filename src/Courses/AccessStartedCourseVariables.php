@@ -13,6 +13,9 @@ class AccessStartedCourseVariables extends CommonUserAndCourseVariables
     // TODO Add variable to emails
     public static function defaultSectionsContent(): array
     {
-        return [];
+        return [
+            'title' => '',
+            'content' => ''
+        ];
     }
 }
