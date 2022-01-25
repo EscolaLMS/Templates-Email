@@ -3,7 +3,7 @@
 namespace EscolaLms\TemplatesEmail;
 
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
-use EscolaLms\Auth\Events\EscolaLmsForgotPasswordTemplateEvent;
+use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Listeners\CreatePasswordResetToken;
 use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
@@ -50,7 +50,7 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
             function () {
                 $templateRepository = app(TemplateRepositoryContract::class);
                 return !empty($templateRepository->findTemplateDefault(
-                    EscolaLmsForgotPasswordTemplateEvent::class,
+                    ForgotPassword::class,
                     EmailChannel::class
                 ));
             }

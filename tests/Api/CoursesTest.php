@@ -6,10 +6,10 @@ use EscolaLms\Core\Models\User as CoreUser;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Courses\Enum\CourseStatusEnum;
-use EscolaLms\Courses\Events\EscolaLmsCourseAssignedTemplateEvent;
-use EscolaLms\Courses\Events\EscolaLmsCourseDeadlineSoonTemplateEvent;
-use EscolaLms\Courses\Events\EscolaLmsCourseFinishedTemplateEvent;
-use EscolaLms\Courses\Events\EscolaLmsCourseUnassignedTemplateEvent;
+use EscolaLms\Courses\Events\CourseAssigned;
+use EscolaLms\Courses\Events\CourseDeadlineSoon;
+use EscolaLms\Courses\Events\CourseFinished;
+use EscolaLms\Courses\Events\CourseUnassigned;
 use EscolaLms\Courses\Jobs\CheckForDeadlines;
 use EscolaLms\Courses\Models\Course;
 use EscolaLms\Courses\Models\Lesson;
@@ -64,12 +64,12 @@ class CoursesTest extends TestCase
         $checkForDealines = new CheckForDeadlines();
         $checkForDealines->handle();
 
-        Event::assertDispatched(EscolaLmsCourseDeadlineSoonTemplateEvent::class, function (EscolaLmsCourseDeadlineSoonTemplateEvent $event) use ($user, $course) {
+        Event::assertDispatched(CourseDeadlineSoon::class, function (CourseDeadlineSoon $event) use ($user, $course) {
             return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
         });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsCourseDeadlineSoonTemplateEvent($user, $course));
+        $listener->handle(new CourseDeadlineSoon($user, $course));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user, $course) {
             $this->assertEquals(__('Deadline for course ":course"', ['course' => $course->title]), $mailable->subject);
@@ -101,12 +101,12 @@ class CoursesTest extends TestCase
         $this->response->assertOk();
 
         $user = CoreUser::find($student->getKey());
-        Event::assertDispatched(EscolaLmsCourseAssignedTemplateEvent::class, function (EscolaLmsCourseAssignedTemplateEvent $event) use ($user, $course) {
+        Event::assertDispatched(CourseAssigned::class, function (CourseAssigned $event) use ($user, $course) {
             return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
         });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsCourseAssignedTemplateEvent($user, $course));
+        $listener->handle(new CourseAssigned($user, $course));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user, $course) {
             $this->assertEquals(__('You have been assigned to ":course"', ['course' => $course->title]), $mailable->subject);
@@ -138,12 +138,12 @@ class CoursesTest extends TestCase
         $this->response->assertOk();
 
         $user = CoreUser::find($student->getKey());
-        Event::assertDispatched(EscolaLmsCourseUnassignedTemplateEvent::class, function (EscolaLmsCourseUnassignedTemplateEvent $event) use ($user, $course) {
+        Event::assertDispatched(CourseUnassigned::class, function (CourseUnassigned $event) use ($user, $course) {
             return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
         });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsCourseUnassignedTemplateEvent($user, $course));
+        $listener->handle(new CourseUnassigned($user, $course));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user, $course) {
             $this->assertEquals(__('You have been unassigned from ":course"', ['course' => $course->title]), $mailable->subject);
@@ -185,12 +185,12 @@ class CoursesTest extends TestCase
 
         $user = CoreUser::find($student->getKey());
 
-        Event::assertDispatched(EscolaLmsCourseFinishedTemplateEvent::class, function (EscolaLmsCourseFinishedTemplateEvent $event) use ($user, $course) {
+        Event::assertDispatched(CourseFinished::class, function (CourseFinished $event) use ($user, $course) {
             return $event->getCourse()->getKey() === $course->getKey() && $event->getUser()->getKey() === $user->getKey();
         });
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsCourseFinishedTemplateEvent($user, $course));
+        $listener->handle(new CourseFinished($user, $course));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user, $course) {
             $this->assertEquals(__('You finished ":course"', ['course' => $course->title]), $mailable->subject);
@@ -198,9 +198,9 @@ class CoursesTest extends TestCase
             return true;
         });
 
-        if (!Event::hasDispatched(EscolaLmsCourseFinishedTemplateEvent::class)) {
+        if (!Event::hasDispatched(CourseFinished::class)) {
             $this->markTestIncomplete(
-                'EscolaLmsCourseFinishedTemplateEvent is not dispatched in Courses'
+                'CourseFinished is not dispatched in Courses'
             );
         }
     }

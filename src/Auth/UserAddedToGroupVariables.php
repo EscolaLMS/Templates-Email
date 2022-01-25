@@ -3,9 +3,6 @@
 namespace EscolaLms\TemplatesEmail\Auth;
 
 use EscolaLms\Templates\Events\EventWrapper;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
 
 class UserAddedToGroupVariables extends CommonAuthVariables
 {

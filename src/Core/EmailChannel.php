@@ -26,12 +26,10 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
         if (!Arr::has($sections, self::sectionsRequired()) || !array_key_exists('contentHtml', $sections)) {
             return false;
         }
-
         $mailable = new EmailMailable();
         $mailable->to($event->getUser()->email);
         $mailable->subject($sections['title']);
         $mailable->html($sections['contentHtml']);
-
         Mail::send($mailable);
 
         return true;

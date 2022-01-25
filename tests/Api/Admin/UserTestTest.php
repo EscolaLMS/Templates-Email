@@ -3,8 +3,8 @@
 namespace EscolaLms\TemplatesEmail\Tests\Api\Admin;
 
 use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
-use EscolaLms\Auth\Events\EscolaLmsAccountBlockedTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsAccountDeletedTemplateEvent;
+use EscolaLms\Auth\Events\AccountBlocked;
+use EscolaLms\Auth\Events\AccountDeleted;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
@@ -32,7 +32,7 @@ class UserTestTest extends TestCase
     {
         $this->seed(AuthPermissionSeeder::class);
         Mail::fake();
-        Event::fake([EscolaLmsAccountDeletedTemplateEvent::class]);
+        Event::fake([AccountDeleted::class]);
         Notification::fake();
 
         $admin = $this->makeAdmin();
@@ -45,10 +45,10 @@ class UserTestTest extends TestCase
             'email' => $student->email,
         ]);
 
-        Event::assertDispatched(EscolaLmsAccountDeletedTemplateEvent::class);
+        Event::assertDispatched(AccountDeleted::class);
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsAccountDeletedTemplateEvent($student));
+        $listener->handle(new AccountDeleted($student));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student) {
             $this->assertEquals('Account Deleted Notification', $mailable->subject);
@@ -62,7 +62,7 @@ class UserTestTest extends TestCase
         $this->seed(AuthPermissionSeeder::class);
         Mail::fake();
         Notification::fake();
-        Event::fake([EscolaLmsAccountBlockedTemplateEvent::class]);
+        Event::fake([AccountBlocked::class]);
 
         $user = $this->makeStudent([
             'is_active' => false,
@@ -76,7 +76,7 @@ class UserTestTest extends TestCase
             'is_active' => true,
         ]);
 
-        Event::assertNotDispatched(EscolaLmsAccountBlockedTemplateEvent::class);
+        Event::assertNotDispatched(AccountBlocked::class);
         $this->assertDatabaseHas('users', [
             'id' => $user->getKey(),
             'is_active' => true,
@@ -88,7 +88,7 @@ class UserTestTest extends TestCase
             'is_active' => false,
         ]);
 
-        Event::assertDispatched(EscolaLmsAccountBlockedTemplateEvent::class);
+        Event::assertDispatched(AccountBlocked::class);
 
         $this->assertDatabaseHas('users', [
             'id' => $user->getKey(),
@@ -96,7 +96,7 @@ class UserTestTest extends TestCase
         ]);
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new EscolaLmsAccountBlockedTemplateEvent($user));
+        $listener->handle(new AccountBlocked($user));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user) {
             $this->assertEquals('Account Blocked Notification', $mailable->subject);
