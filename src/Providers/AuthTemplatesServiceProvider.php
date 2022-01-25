@@ -2,15 +2,15 @@
 
 namespace EscolaLms\TemplatesEmail\Providers;
 
-use EscolaLms\Auth\Events\EscolaLmsAccountConfirmedTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsAccountMustBeEnableByAdminTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsAccountRegisteredTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsForgotPasswordTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsLoginTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsPasswordChangedTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsResetPasswordTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsUserAddedToGroupTemplateEvent;
-use EscolaLms\Auth\Events\EscolaLmsUserRemovedFromGroupTemplateEvent;
+use EscolaLms\Auth\Events\AccountConfirmed;
+use EscolaLms\Auth\Events\AccountMustBeEnableByAdmin;
+use EscolaLms\Auth\Events\AccountRegistered;
+use EscolaLms\Auth\Events\ForgotPassword;
+use EscolaLms\Auth\Events\Login;
+use EscolaLms\Auth\Events\PasswordChanged;
+use EscolaLms\Auth\Events\ResetPassword;
+use EscolaLms\Auth\Events\UserAddedToGroup;
+use EscolaLms\Auth\Events\UserRemovedFromGroup;
 use EscolaLms\Templates\Facades\Template;
 use EscolaLms\TemplatesEmail\Auth\AccountConfirmedVariables;
 use EscolaLms\TemplatesEmail\Auth\PasswordChangedVariables;
@@ -26,14 +26,14 @@ class AuthTemplatesServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        Template::register(EscolaLmsAccountMustBeEnableByAdminTemplateEvent::class, EmailChannel::class, VerifyUserAccountVariables::class);
-        Template::register(EscolaLmsForgotPasswordTemplateEvent::class, EmailChannel::class, ResetPasswordVariables::class);
-        Template::register(EscolaLmsAccountRegisteredTemplateEvent::class, EmailChannel::class, VerifyEmailVariables::class);
-        Template::register(EscolaLmsAccountConfirmedTemplateEvent::class, EmailChannel::class, AccountConfirmedVariables::class);
-        Template::register(EscolaLmsUserAddedToGroupTemplateEvent::class, EmailChannel::class, UserAddedToGroupVariables::class);
-        Template::register(EscolaLmsUserRemovedFromGroupTemplateEvent::class, EmailChannel::class, UserRemovedFromGroupVariables::class);
-        Template::register(EscolaLmsResetPasswordTemplateEvent::class, EmailChannel::class, ResetPasswordVariables::class);
-        Template::register(EscolaLmsPasswordChangedTemplateEvent::class, EmailChannel::class, PasswordChangedVariables::class);
-        Template::register(EscolaLmsLoginTemplateEvent::class, EmailChannel::class, VerifyEmailVariables::class);
+        Template::register(AccountMustBeEnableByAdmin::class, EmailChannel::class, VerifyUserAccountVariables::class);
+        Template::register(ForgotPassword::class, EmailChannel::class, ResetPasswordVariables::class);
+        Template::register(AccountRegistered::class, EmailChannel::class, VerifyEmailVariables::class);
+        Template::register(AccountConfirmed::class, EmailChannel::class, AccountConfirmedVariables::class);
+        Template::register(UserAddedToGroup::class, EmailChannel::class, UserAddedToGroupVariables::class);
+        Template::register(UserRemovedFromGroup::class, EmailChannel::class, UserRemovedFromGroupVariables::class);
+        Template::register(ResetPassword::class, EmailChannel::class, ResetPasswordVariables::class);
+        Template::register(PasswordChanged::class, EmailChannel::class, PasswordChangedVariables::class);
+        Template::register(Login::class, EmailChannel::class, VerifyEmailVariables::class);
     }
 }
