@@ -34,7 +34,6 @@ class AuthTemplatesServiceProvider extends ServiceProvider
         Template::register(AccountConfirmed::class, EmailChannel::class, AccountConfirmedVariables::class);
         Template::register(UserAddedToGroup::class, EmailChannel::class, UserAddedToGroupVariables::class);
         Template::register(UserRemovedFromGroup::class, EmailChannel::class, UserRemovedFromGroupVariables::class);
-        Template::register(ResetPassword::class, EmailChannel::class, ResetPasswordVariables::class);
         Template::register(PasswordChanged::class, EmailChannel::class, PasswordChangedVariables::class);
         Template::register(Login::class, EmailChannel::class, VerifyEmailVariables::class);
         Template::register(AccountMustBeEnableByAdmin::class, EmailChannel::class, VerifyUserAccountVariables::class);
