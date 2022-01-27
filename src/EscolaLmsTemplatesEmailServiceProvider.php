@@ -45,16 +45,6 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         if (class_exists(\EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider::class)) {
             $this->app->register(CsvUsersTemplatesServiceProvider::class);
         }
-
-        CreatePasswordResetToken::setRunEventForgotPassword(
-            function () {
-                $templateRepository = app(TemplateRepositoryContract::class);
-                return !empty($templateRepository->findTemplateDefault(
-                    ForgotPassword::class,
-                    EmailChannel::class
-                ));
-            }
-        );
     }
 
     public function boot()
@@ -71,6 +61,16 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_secret', ['required', 'string'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.default_template', ['required', 'string', new MjmlRule()], false);
         }
+
+        CreatePasswordResetToken::setRunEventForgotPassword(
+            function () {
+                $templateRepository = app(TemplateRepositoryContract::class);
+                return empty($templateRepository->findTemplateDefault(
+                    ForgotPassword::class,
+                    EmailChannel::class
+                ));
+            }
+        );
     }
 
     public function bootForConsole()
