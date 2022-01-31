@@ -6,6 +6,7 @@ use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Listeners\CreatePasswordResetToken;
 use EscolaLms\Settings\Facades\AdministrableConfig;
+use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
@@ -44,6 +45,12 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
         if (class_exists(\EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider::class)) {
             $this->app->register(CsvUsersTemplatesServiceProvider::class);
+        }
+        if (
+            class_exists(EscolaLmsTemplatesServiceProvider::class) &&
+            !$this->app->getProviders(EscolaLmsTemplatesServiceProvider::class)
+        ) {
+            $this->app->register(EscolaLmsTemplatesServiceProvider::class);
         }
     }
 
