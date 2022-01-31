@@ -47,6 +47,7 @@ class AuthTest extends TestCase
             'last_name' => 'tester',
             'password' => 'testtest',
             'password_confirmation' => 'testtest',
+            'return_url' => 'https://escolalms.com/email/verify',
         ]);
 
         $this->assertApiSuccess();
@@ -62,7 +63,7 @@ class AuthTest extends TestCase
         Notification::assertNotSentTo($user, VerifyEmail::class);
 
         $listener = app(TemplateEventListener::class);
-        $listener->handle(new AccountRegistered($user));
+        $listener->handle(new AccountRegistered($user, 'https://escolalms.com/email/verify'));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user) {
             $this->assertEquals('Verify Email Address', $mailable->subject);
