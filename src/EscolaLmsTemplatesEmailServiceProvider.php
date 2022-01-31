@@ -3,8 +3,10 @@
 namespace EscolaLms\TemplatesEmail;
 
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
+use EscolaLms\Auth\Events\AccountRegistered;
 use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Listeners\CreatePasswordResetToken;
+use EscolaLms\Auth\Listeners\SendEmailVerificationNotification;
 use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
@@ -67,6 +69,16 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
                 $templateRepository = app(TemplateRepositoryContract::class);
                 return empty($templateRepository->findTemplateDefault(
                     ForgotPassword::class,
+                    EmailChannel::class
+                ));
+            }
+        );
+
+        SendEmailVerificationNotification::setRunEventEmailVerification(
+            function () {
+                $templateRepository = app(TemplateRepositoryContract::class);
+                return empty($templateRepository->findTemplateDefault(
+                    AccountRegistered::class,
                     EmailChannel::class
                 ));
             }
