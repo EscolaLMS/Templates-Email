@@ -13,6 +13,18 @@ class VerifyEmailVariables extends CommonAuthVariables
     {
         $notifiable = $event->getUser();
 
+        try {
+            $url = $event->getReturnUrl();
+        } catch (\Throwable $th) {
+            $url = null;
+        }
+
+        if (!empty($url)) {
+            return $url .
+                '?id=' . $notifiable->getKey() .
+                '&hash=' . sha1($notifiable->getEmailForVerification());
+        }
+
         return URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(config('auth.verification.expire', 60)),
