@@ -123,6 +123,7 @@ class AuthTest extends TestCase
             'last_name' => 'tester',
             'password' => 'testtest',
             'password_confirmation' => 'testtest',
+            'return_url' => 'https://escolalms.com/email/verify',
         ]);
 
         $this->assertApiSuccess();
