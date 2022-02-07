@@ -15,6 +15,8 @@ use EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Config;
 use Laravel\Passport\Passport;
 use Laravel\Passport\PassportServiceProvider;
 use Mockery;
@@ -23,12 +25,16 @@ use Spatie\Permission\PermissionServiceProvider;
 
 class TestCase extends CoreTestCase
 {
+    use DatabaseTransactions;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         Passport::useClientModel(Client::class);
 
+        Config::set('escola_settings.use_database', true);
+        Config::set(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.use_api', true);
         $this->instance(
             MjmlServiceContract::class,
             Mockery::mock(MjmlService::class, function (MockInterface $mock) {
