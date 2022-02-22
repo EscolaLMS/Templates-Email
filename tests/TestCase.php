@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Tests;
 
+use EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider;
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Tests\Models\Client;
@@ -67,6 +68,9 @@ class TestCase extends CoreTestCase
         }
         if (class_exists(\EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider::class)) {
             $providers[] = EscolaLmsCsvUsersServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider::class)) {
+            $providers[] = EscolaLmsAssignWithoutAccountServiceProvider::class;
         }
         return $providers;
     }
