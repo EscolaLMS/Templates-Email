@@ -11,6 +11,7 @@ use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
+use EscolaLms\TemplatesEmail\Providers\AssignWithoutAccountTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
@@ -53,6 +54,10 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
             !$this->app->getProviders(EscolaLmsTemplatesServiceProvider::class)
         ) {
             $this->app->register(EscolaLmsTemplatesServiceProvider::class);
+        }
+
+        if (class_exists(\EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider::class)) {
+            $this->app->register(AssignWithoutAccountTemplatesEventServiceProvider::class);
         }
     }
 
