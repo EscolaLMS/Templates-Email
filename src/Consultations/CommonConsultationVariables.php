@@ -2,8 +2,8 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
-use EscolaLms\Auth\Models\User;
 use EscolaLms\Consultations\Models\ConsultationTerm;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
 
