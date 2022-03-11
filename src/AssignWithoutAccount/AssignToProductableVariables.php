@@ -7,36 +7,30 @@ use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
 use Illuminate\Support\Facades\Lang;
 
-class UserSubmissionAcceptedVariables extends EmailVariables
+class AssignToProductableVariables extends EmailVariables
 {
-    const VAR_URL = "@VarUrl";
+    const VAR_PRODUCTABLE_NAME = "@VarProductableName";
 
     public static function mockedVariables(?User $user = null): array
     {
+        $faker = \Faker\Factory::create();
         return array_merge(parent::mockedVariables($user), [
-            self::VAR_URL => '',
+            self::VAR_PRODUCTABLE_NAME => $faker->word,
         ]);
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
         return array_merge(parent::variablesFromEvent($event), [
-            self::VAR_URL => $event->getUrl(),
+            self::VAR_PRODUCTABLE_NAME => $event->getProductable()->getName(),
         ]);
     }
 
     public static function defaultSectionsContent(): array
     {
         return [
-            'title' => Lang::get('Access granted'),
-            'content' => self::wrapWithMjml(
-                '<mj-text>'
-                . '<p>'
-                . Lang::get('You are receiving this email because access has been granted to you.')
-                . '</p>'
-                . '</mj-text>'
-                . '<mj-button href="' . self::VAR_URL . '">' . Lang::get('Join') . '</mj-button>'
-            )
+            'title' => '',
+            'content' => ''
         ];
     }
 
@@ -48,7 +42,7 @@ class UserSubmissionAcceptedVariables extends EmailVariables
     public static function requiredVariables(): array
     {
         return [
-            self::VAR_URL
+            self::VAR_PRODUCTABLE_NAME
         ];
     }
 
@@ -56,7 +50,7 @@ class UserSubmissionAcceptedVariables extends EmailVariables
     {
         if ($sectionKey === 'content') {
             return [
-                self::VAR_URL,
+                self::VAR_PRODUCTABLE_NAME,
             ];
         }
 
