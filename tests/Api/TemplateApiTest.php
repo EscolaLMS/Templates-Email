@@ -3,20 +3,24 @@
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\Core\Tests\CreatesUsers;
+use EscolaLms\Templates\Database\Seeders\PermissionTableSeeder;
 use EscolaLms\Templates\Events\ManuallyTriggeredEvent;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
-use EscolaLms\Templates\Models\Template;
-use EscolaLms\Templates\Models\TemplateSection;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Notifications\Channels\MailChannel;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 
 class TemplateApiTest extends TestCase
 {
     use DatabaseTransactions, CreatesUsers;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(PermissionTableSeeder::class);
+    }
 
     public function testManuallyTriggeredEvent(): void
     {
