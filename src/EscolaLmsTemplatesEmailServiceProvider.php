@@ -18,6 +18,7 @@ use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\ConsultationTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
@@ -64,6 +65,7 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         if (class_exists(EscolaLmsConsultationsServiceProvider::class)) {
             $this->app->register(ConsultationTemplatesServiceProvider::class);
         }
+        $this->app->register(TemplateServiceProvider::class);
     }
 
     public function boot()
