@@ -6,6 +6,7 @@ use EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider;
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
 use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Tests\Models\Client;
+use EscolaLms\Cart\EscolaLmsCartServiceProvider;
 use EscolaLms\Core\Tests\TestCase as CoreTestCase;
 use EscolaLms\Courses\EscolaLmsCourseServiceProvider;
 use EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider;
@@ -71,6 +72,9 @@ class TestCase extends CoreTestCase
         }
         if (class_exists(\EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider::class)) {
             $providers[] = EscolaLmsAssignWithoutAccountServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\Cart\EscolaLmsCartServiceProvider::class)) {
+            $providers[] = EscolaLmsCartServiceProvider::class;
         }
         return $providers;
     }
