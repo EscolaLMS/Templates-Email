@@ -16,7 +16,6 @@ use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 
@@ -32,7 +31,6 @@ class CartTest extends TestCase
             $this->markTestSkipped('Courses package not installed');
         }
 
-        Config::set('auth.providers.users.model', User::class);
         $this->seed(CartPermissionSeeder::class);
         $this->admin = $this->makeAdmin();
         Shop::registerProductableClass(ExampleProductable::class);
@@ -77,6 +75,7 @@ class CartTest extends TestCase
     protected function getEnvironmentSetUp($app)
     {
         parent::getEnvironmentSetUp($app);
+        $app['config']->set('auth.providers.users.model', User::class);
         ExampleProductableMigration::run();
     }
 }
