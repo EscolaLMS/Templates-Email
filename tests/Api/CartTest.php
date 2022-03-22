@@ -35,7 +35,6 @@ class CartTest extends TestCase
         Config::set('auth.providers.users.model', User::class);
         $this->seed(CartPermissionSeeder::class);
         $this->admin = $this->makeAdmin();
-        ExampleProductableMigration::run();
         Shop::registerProductableClass(ExampleProductable::class);
     }
 
@@ -73,5 +72,11 @@ class CartTest extends TestCase
 
             return true;
         });
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        parent::getEnvironmentSetUp($app);
+        ExampleProductableMigration::run();
     }
 }
