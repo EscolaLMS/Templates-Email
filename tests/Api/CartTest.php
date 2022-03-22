@@ -9,7 +9,7 @@ use EscolaLms\Cart\Models\Product;
 use EscolaLms\Cart\Models\ProductProductable;
 use EscolaLms\Cart\Models\User;
 use EscolaLms\Cart\Tests\Mocks\ExampleProductable;
-use EscolaLms\Core\Tests\ApiTestTrait;
+use EscolaLms\Cart\Tests\Mocks\ExampleProductableMigration;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
@@ -35,6 +35,7 @@ class CartTest extends TestCase
         Config::set('auth.providers.users.model', User::class);
         $this->seed(CartPermissionSeeder::class);
         $this->admin = $this->makeAdmin();
+        ExampleProductableMigration::run();
         Shop::registerProductableClass(ExampleProductable::class);
     }
 
