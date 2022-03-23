@@ -16,8 +16,10 @@ use EscolaLms\TemplatesEmail\Providers\AssignWithoutAccountTemplatesEventService
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\ConsultationTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
@@ -57,13 +59,22 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         ) {
             $this->app->register(EscolaLmsTemplatesServiceProvider::class);
         }
-
         if (class_exists(\EscolaLms\AssignWithoutAccount\EscolaLmsAssignWithoutAccountServiceProvider::class)) {
             $this->app->register(AssignWithoutAccountTemplatesEventServiceProvider::class);
         }
         if (class_exists(EscolaLmsConsultationsServiceProvider::class)) {
             $this->app->register(ConsultationTemplatesServiceProvider::class);
         }
+        if (class_exists(\EscolaLms\Cart\EscolaLmsCartServiceProvider::class)) {
+            $this->app->register(CartTemplatesServiceProvider::class);
+        }
+
+        $this->app->register(TemplateServiceProvider::class);
+
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'templates-email');
+        $this->publishes([
+            __DIR__.'/../resources/views' => resource_path('views/vendor/templates-email'),
+        ]);
     }
 
     public function boot()

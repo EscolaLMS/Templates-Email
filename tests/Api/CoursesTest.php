@@ -88,7 +88,6 @@ class CoursesTest extends TestCase
 
         $course = Course::factory()->create([
             'author_id' => $admin->id,
-            'base_price' => 1337,
             'status' => CourseStatusEnum::PUBLISHED
         ]);
 
@@ -125,7 +124,6 @@ class CoursesTest extends TestCase
 
         $course = Course::factory()->create([
             'author_id' => $admin->id,
-            'base_price' => 1337,
             'status' => CourseStatusEnum::PUBLISHED
         ]);
         $student = User::factory()->create();

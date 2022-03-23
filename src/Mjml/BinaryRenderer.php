@@ -14,6 +14,6 @@ class BinaryRenderer extends QferrerBinaryRenderer
 
     public function getMjmlBinaryPath(): string
     {
-        return config(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.binary_path', base_path('node_modules/.bin/mjml'));
+        return config(EscolaLmsTemplatesEmailServiceProvider::CONFIG_KEY . '.mjml.binary_path', base_path('node_modules/.bin/mjml')) ?? base_path('node_modules/.bin/mjml');
     }
 }

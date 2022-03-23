@@ -4,14 +4,17 @@ namespace EscolaLms\TemplatesEmail\Consultations;
 
 class ApprovedTermVariables extends CommonConsultationVariables
 {
-    const VAR_COURSE_DEADLINE = '@VarApprovedTerm';
-
-    // TODO Add variable to emails
     public static function defaultSectionsContent(): array
     {
         return [
-            'title' => '',
-            'content' => ''
+            'title' => __('Approved term ":consultation"', [
+                'consultation' => self::VAR_CONSULTATION_TITLE,
+            ]),
+            'content' => self::wrapWithMjml(__('<h1>Hello :user_name!</h1><p>Reported term :proposed_term for consultation ":consultation" was approved.</p>', [
+                'user_name' => self::VAR_USER_NAME,
+                'consultation' => self::VAR_CONSULTATION_TITLE,
+                'proposed_term' => self::VAR_CONSULTATION_PROPOSED_TERM
+            ]),),
         ];
     }
 }
