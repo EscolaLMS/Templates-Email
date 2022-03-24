@@ -13,15 +13,13 @@ abstract class CommonConsultationVariables extends EmailVariables
     const VAR_CONSULTATION_TITLE    = '@VarConsultationTitle';
     const VAR_CONSULTATION_PROPOSED_TERM    = '@VarConsultationProposedTerm';
 
-
-
     public static function mockedVariables(?User $user = null): array
     {
         $faker = \Faker\Factory::create();
         return array_merge(parent::mockedVariables(), [
             self::VAR_USER_NAME       => $faker->name(),
             self::VAR_CONSULTATION_TITLE    => $faker->word(),
-
+            self::VAR_CONSULTATION_PROPOSED_TERM => $faker->dateTime(),
         ]);
     }
 
