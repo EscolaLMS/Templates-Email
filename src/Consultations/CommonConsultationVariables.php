@@ -2,7 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
-use EscolaLms\Consultations\Models\ConsultationTerm;
+use EscolaLms\Consultations\Models\ConsultationUserPivot;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
@@ -55,6 +55,6 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function assignableClass(): ?string
     {
-        return ConsultationTerm::class;
+        return ConsultationUserPivot::class;
     }
 }
