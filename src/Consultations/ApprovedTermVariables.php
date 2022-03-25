@@ -14,7 +14,7 @@ class ApprovedTermVariables extends CommonConsultationVariables
                 'user_name' => self::VAR_USER_NAME,
                 'consultation' => self::VAR_CONSULTATION_TITLE,
                 'proposed_term' => self::VAR_CONSULTATION_PROPOSED_TERM
-            ]),),
+            ])),
         ];
     }
 }
