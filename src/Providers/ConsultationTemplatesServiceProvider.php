@@ -4,9 +4,11 @@ namespace EscolaLms\TemplatesEmail\Providers;
 
 use EscolaLms\Consultations\Events\ApprovedTerm;
 use EscolaLms\Consultations\Events\RejectTerm;
+use EscolaLms\Consultations\Events\ReminderAboutTerm;
 use EscolaLms\Consultations\Events\ReportTerm;
 use EscolaLms\TemplatesEmail\Consultations\ApprovedTermVariables;
 use EscolaLms\TemplatesEmail\Consultations\RejectTermVariables;
+use EscolaLms\TemplatesEmail\Consultations\ReminderAboutTermVariables;
 use EscolaLms\TemplatesEmail\Consultations\ReportTermVariables;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use Illuminate\Support\ServiceProvider;
@@ -19,5 +21,6 @@ class ConsultationTemplatesServiceProvider extends ServiceProvider
         Template::register(ApprovedTerm::class, EmailChannel::class, ApprovedTermVariables::class);
         Template::register(RejectTerm::class, EmailChannel::class, RejectTermVariables::class);
         Template::register(ReportTerm::class, EmailChannel::class, ReportTermVariables::class);
+        Template::register(ReminderAboutTerm::class, EmailChannel::class, ReminderAboutTermVariables::class);
     }
 }
