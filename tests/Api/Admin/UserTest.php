@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
-class UserTestTest extends TestCase
+class UserTest extends TestCase
 {
     use CreatesUsers, ApiTestTrait, WithoutMiddleware, DatabaseTransactions;
 
