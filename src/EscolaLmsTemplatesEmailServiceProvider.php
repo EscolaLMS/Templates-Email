@@ -20,9 +20,11 @@ use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\WebinarTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
+use EscolaLms\Webinar\EscolaLmsWebinarServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -64,6 +66,9 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
         if (class_exists(EscolaLmsConsultationsServiceProvider::class)) {
             $this->app->register(ConsultationTemplatesServiceProvider::class);
+        }
+        if (class_exists(EscolaLmsWebinarServiceProvider::class)) {
+            $this->app->register(WebinarTemplatesServiceProvider::class);
         }
         if (class_exists(\EscolaLms\Cart\EscolaLmsCartServiceProvider::class)) {
             $this->app->register(CartTemplatesServiceProvider::class);
