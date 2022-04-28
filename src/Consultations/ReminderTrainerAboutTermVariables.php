@@ -4,7 +4,7 @@ namespace EscolaLms\TemplatesEmail\Consultations;
 
 use EscolaLms\Templates\Events\EventWrapper;
 
-class ReminderTrainerAboutTerm extends CommonConsultationVariables
+class ReminderTrainerAboutTermVariables extends CommonConsultationVariables
 {
     const VAR_CONSULTATION_USER_NAME = '@VarConsultationUserName';
 
