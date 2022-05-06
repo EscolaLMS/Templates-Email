@@ -39,7 +39,7 @@ class UserTestTest extends TestCase
         $admin = $this->makeAdmin();
         $student = $this->makeStudent();
         $id = $student->getKey();
-        $this->response = $this->actingAs($admin, 'api')->delete("/api/admin/users/{$id}");
+        $this->response = $this->actingAs($admin, 'api')->deleteJson("/api/admin/users/{$id}");
         $user = User::where('id', '=', $id)->first();
 
         $this->assertApiSuccess();
