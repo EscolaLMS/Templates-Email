@@ -5,7 +5,7 @@ namespace EscolaLms\TemplatesEmail\Tests\Api\Admin;
 use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
 use EscolaLms\Auth\Events\AccountBlocked;
 use EscolaLms\Auth\Events\AccountDeleted;
-use EscolaLms\Core\Models\User;
+use EscolaLms\Auth\Models\User;
 use EscolaLms\Core\Tests\ApiTestTrait;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
@@ -40,10 +40,14 @@ class UserTestTest extends TestCase
         $student = $this->makeStudent();
         $id = $student->getKey();
         $this->response = $this->actingAs($admin, 'api')->deleteJson("/api/admin/users/{$id}");
-        $count = User::where('email', '=', $student->email)->count();
-
+        $user = User::where('email', '=', $student->email)->first();
+        if ($user) {
+            $this->assertTrue($user->trashed());
+        } else {
+            $this->assertTrue(is_null($user));
+        }
         $this->assertApiSuccess();
-        $this->assertTrue($count === 0);
+
 
         Event::assertDispatched(AccountDeleted::class);
 
