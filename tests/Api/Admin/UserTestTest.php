@@ -40,10 +40,10 @@ class UserTestTest extends TestCase
         $student = $this->makeStudent();
         $id = $student->getKey();
         $this->response = $this->actingAs($admin, 'api')->deleteJson("/api/admin/users/{$id}");
-        $user = User::where('id', '=', $id)->first();
+        $count = User::where('email', '=', $student->email)->count();
 
         $this->assertApiSuccess();
-        $this->assertTrue(is_null($user));
+        $this->assertTrue($count === 0);
 
         Event::assertDispatched(AccountDeleted::class);
 
