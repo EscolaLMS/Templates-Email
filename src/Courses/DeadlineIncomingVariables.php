@@ -5,6 +5,7 @@ namespace EscolaLms\TemplatesEmail\Courses;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Courses\ValueObjects\CourseProgressCollection;
 use EscolaLms\Templates\Events\EventWrapper;
+use Illuminate\Support\Carbon;
 
 class DeadlineIncomingVariables extends CommonUserAndCourseVariables
 {
@@ -22,7 +23,9 @@ class DeadlineIncomingVariables extends CommonUserAndCourseVariables
     {
         $progress = CourseProgressCollection::make($event->getUser(), $event->getCourse());
         return array_merge(parent::variablesFromEvent($event), [
-            self::VAR_COURSE_DEADLINE => $progress->getDeadline()
+            self::VAR_COURSE_DEADLINE => Carbon::make($progress->getDeadline())
+                ->setTimezone($event->getUser()->current_timezone)
+                ->format('Y-m-d H:i:s')
         ]);
     }
 
