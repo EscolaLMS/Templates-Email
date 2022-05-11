@@ -21,10 +21,12 @@ use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\WebinarTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\YoutubeTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
 use EscolaLms\Webinar\EscolaLmsWebinarServiceProvider;
+use EscolaLms\Youtube\EscolaLmsYoutubeServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -72,6 +74,9 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
         if (class_exists(\EscolaLms\Cart\EscolaLmsCartServiceProvider::class)) {
             $this->app->register(CartTemplatesServiceProvider::class);
+        }
+        if (class_exists(EscolaLmsYoutubeServiceProvider::class)) {
+            $this->app->register(YoutubeTemplatesServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);

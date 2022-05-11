@@ -30,18 +30,11 @@ abstract class CommonYoutubeVariables extends EmailVariables
 
     public static function requiredVariables(): array
     {
-        return [
-            self::VAR_USER_EMAIL,
-        ];
+        return [];
     }
 
     public static function requiredVariablesInSection(string $sectionKey): array
     {
-        if ($sectionKey === 'content') {
-            return [
-                self::VAR_USER_EMAIL,
-            ];
-        }
         return [];
     }
 
