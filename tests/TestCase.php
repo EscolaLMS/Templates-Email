@@ -17,6 +17,7 @@ use EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
+use EscolaLms\Youtube\EscolaLmsYoutubeServiceProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
 use Laravel\Passport\Passport;
@@ -55,6 +56,9 @@ class TestCase extends CoreTestCase
             EscolaLmsTemplatesServiceProvider::class,
             EscolaLmsTemplatesEmailServiceProvider::class,
         ];
+        if (class_exists(EscolaLmsYoutubeServiceProvider::class)) {
+            $providers[] = EscolaLmsYoutubeServiceProvider::class;
+        }
         if (class_exists(\EscolaLms\Auth\EscolaLmsAuthServiceProvider::class)) {
             $providers[] = EscolaLmsAuthServiceProvider::class;
         }

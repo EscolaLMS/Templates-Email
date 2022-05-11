@@ -4,14 +4,14 @@ namespace EscolaLms\TemplatesEmail\Consultations;
 
 use EscolaLms\Templates\Events\EventWrapper;
 
-class ReminderAboutTermVariables extends CommonConsultationVariables
+class ReminderTrainerAboutTermVariables extends CommonConsultationVariables
 {
-    const VAR_CONSULTATION_TERM_ID = '@VarConsultationTermId';
+    const VAR_CONSULTATION_USER_NAME = '@VarConsultationUserName';
 
     public static function requiredVariables(): array
     {
         return array_merge(parent::requiredVariables(), [
-            self::VAR_CONSULTATION_TERM_ID,
+            self::VAR_CONSULTATION_USER_NAME,
         ]);
     }
 
@@ -19,7 +19,7 @@ class ReminderAboutTermVariables extends CommonConsultationVariables
     {
         if ($sectionKey === 'content') {
             return array_merge(parent::requiredVariablesInSection($sectionKey), [
-                self::VAR_CONSULTATION_TERM_ID,
+                self::VAR_CONSULTATION_USER_NAME,
             ]);
         }
         return [];
@@ -28,7 +28,7 @@ class ReminderAboutTermVariables extends CommonConsultationVariables
     public static function variablesFromEvent(EventWrapper $event): array
     {
         return array_merge(parent::variablesFromEvent($event), [
-            self::VAR_CONSULTATION_TERM_ID => $event->getConsultationTerm()->user->name,
+            self::VAR_CONSULTATION_USER_NAME => $event->getConsultationTerm()->user->name,
         ]);
     }
 
@@ -38,10 +38,10 @@ class ReminderAboutTermVariables extends CommonConsultationVariables
             'title' => __('Remind term ":consultation"', [
                 'consultation' => self::VAR_CONSULTATION_TITLE,
             ]),
-            'content' => self::wrapWithMjml(__('<h1>Hello :user_name!</h1><p>I would like to remind you about the upcoming consultation :consultation, which will take place :proposed_term.</p>', [
+            'content' => self::wrapWithMjml(__('<h1>Hello :user_name!</h1><p>I would like to remind you about the upcoming consultation :consultation with :consultation_user_name, which will take place :proposed_term.</p>', [
                 'user_name' => self::VAR_USER_NAME,
+                'consultation_user_name' => self::VAR_CONSULTATION_USER_NAME,
                 'consultation' => self::VAR_CONSULTATION_TITLE,
-                'consultation_term_id' => self::VAR_CONSULTATION_TERM_ID,
                 'proposed_term' => self::VAR_CONSULTATION_PROPOSED_TERM
             ]),),
         ];

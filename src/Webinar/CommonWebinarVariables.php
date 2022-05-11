@@ -1,26 +1,26 @@
 <?php
 
-namespace EscolaLms\TemplatesEmail\Consultations;
+namespace EscolaLms\TemplatesEmail\Webinar;
 
-use EscolaLms\Consultations\Models\ConsultationUserPivot;
+use Carbon\Carbon;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
-use Illuminate\Support\Carbon;
+use EscolaLms\Webinar\Models\Webinar;
 
-abstract class CommonConsultationVariables extends EmailVariables
+abstract class CommonWebinarVariables extends EmailVariables
 {
     const VAR_USER_NAME       = '@VarUserName';
-    const VAR_CONSULTATION_TITLE    = '@VarConsultationTitle';
-    const VAR_CONSULTATION_PROPOSED_TERM    = '@VarConsultationProposedTerm';
+    const VAR_WEBINAR_TITLE    = '@VarWebinarTitle';
+    const VAR_WEBINAR_PROPOSED_TERM    = '@VarWebinarProposedTerm';
 
     public static function mockedVariables(?User $user = null): array
     {
         $faker = \Faker\Factory::create();
         return array_merge(parent::mockedVariables(), [
             self::VAR_USER_NAME       => $faker->name(),
-            self::VAR_CONSULTATION_TITLE    => $faker->word(),
-            self::VAR_CONSULTATION_PROPOSED_TERM => $faker->dateTime(),
+            self::VAR_WEBINAR_TITLE    => $faker->word(),
+            self::VAR_WEBINAR_PROPOSED_TERM => $faker->dateTime(),
         ]);
     }
 
@@ -28,8 +28,8 @@ abstract class CommonConsultationVariables extends EmailVariables
     {
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
-            self::VAR_CONSULTATION_TITLE => $event->getConsultationTerm()->consultation->name,
-            self::VAR_CONSULTATION_PROPOSED_TERM => Carbon::make($event->getConsultationTerm()->executed_at)
+            self::VAR_WEBINAR_TITLE => $event->getConsultationTerm()->consultation->name,
+            self::VAR_WEBINAR_PROPOSED_TERM => Carbon::make($event->getConsultationTerm()->executed_at)
                 ->setTimezone($event->getUser()->current_timezone)
                 ->format('Y-m-d H:i:s'),
         ]);
@@ -39,8 +39,7 @@ abstract class CommonConsultationVariables extends EmailVariables
     {
         return [
             self::VAR_USER_NAME,
-            self::VAR_CONSULTATION_TITLE,
-            self::VAR_CONSULTATION_PROPOSED_TERM,
+            self::VAR_WEBINAR_TITLE,
         ];
     }
 
@@ -49,8 +48,7 @@ abstract class CommonConsultationVariables extends EmailVariables
         if ($sectionKey === 'content') {
             return [
                 self::VAR_USER_NAME,
-                self::VAR_CONSULTATION_TITLE,
-                self::VAR_CONSULTATION_PROPOSED_TERM,
+                self::VAR_WEBINAR_TITLE,
             ];
         }
         return [];
@@ -58,6 +56,6 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function assignableClass(): ?string
     {
-        return ConsultationUserPivot::class;
+        return Webinar::class;
     }
 }
