@@ -40,7 +40,6 @@ abstract class CommonWebinarVariables extends EmailVariables
         return [
             self::VAR_USER_NAME,
             self::VAR_WEBINAR_TITLE,
-            self::VAR_WEBINAR_PROPOSED_TERM,
         ];
     }
 
@@ -50,7 +49,6 @@ abstract class CommonWebinarVariables extends EmailVariables
             return [
                 self::VAR_USER_NAME,
                 self::VAR_WEBINAR_TITLE,
-                self::VAR_WEBINAR_PROPOSED_TERM,
             ];
         }
         return [];
