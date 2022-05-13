@@ -8,7 +8,6 @@ use EscolaLms\Auth\Events\AccountRegistered;
 use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Events\Login;
 use EscolaLms\Auth\Events\PasswordChanged;
-use EscolaLms\Auth\Events\ResetPassword;
 use EscolaLms\Auth\Events\UserAddedToGroup;
 use EscolaLms\Auth\Events\UserRemovedFromGroup;
 use EscolaLms\Templates\Facades\Template;

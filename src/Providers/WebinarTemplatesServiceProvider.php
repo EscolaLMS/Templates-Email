@@ -2,8 +2,8 @@
 
 namespace EscolaLms\TemplatesEmail\Providers;
 
-use EscolaLms\TemplatesEmail\Consultations\ReminderAboutTermVariables;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
+use EscolaLms\TemplatesEmail\Webinar\ReminderAboutTermVariables;
 use EscolaLms\TemplatesEmail\Webinar\WebinarTrainerAssignedVariables;
 use EscolaLms\TemplatesEmail\Webinar\WebinarTrainerUnassignedVariables;
 use EscolaLms\Webinar\Events\ReminderAboutTerm;
