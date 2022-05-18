@@ -6,7 +6,6 @@ use EscolaLms\Auth\Events\AccountConfirmed;
 use EscolaLms\Auth\Events\AccountMustBeEnableByAdmin;
 use EscolaLms\Auth\Events\AccountRegistered;
 use EscolaLms\Auth\Events\ForgotPassword;
-use EscolaLms\Auth\Events\Login;
 use EscolaLms\Auth\Events\PasswordChanged;
 use EscolaLms\Auth\Events\UserAddedToGroup;
 use EscolaLms\Auth\Events\UserRemovedFromGroup;
@@ -34,7 +33,6 @@ class AuthTemplatesServiceProvider extends ServiceProvider
         Template::register(UserAddedToGroup::class, EmailChannel::class, UserAddedToGroupVariables::class);
         Template::register(UserRemovedFromGroup::class, EmailChannel::class, UserRemovedFromGroupVariables::class);
         Template::register(PasswordChanged::class, EmailChannel::class, PasswordChangedVariables::class);
-        Template::register(Login::class, EmailChannel::class, VerifyEmailVariables::class);
         Template::register(AccountMustBeEnableByAdmin::class, EmailChannel::class, VerifyUserAccountVariables::class);
         Template::register(ForgotPassword::class, EmailChannel::class, ResetPasswordVariables::class);
         Template::register(AccountRegistered::class, EmailChannel::class, VerifyEmailVariables::class);
