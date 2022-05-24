@@ -26,7 +26,7 @@ This package allows you to add template email includes event and email variable
 
 ## Tests
 
-Run `./vendor/bin/phpunit --filter 'EscolaLms\\TemplatesEmail\\Tests'` to run tests. See [tests](tests) folder as it's quite good staring point as documentation appendix.
+Run `./vendor/bin/phpunit --filter 'EscolaLms\\TemplatesEmail\\Tests'` to run tests. See [tests](tests) folder as it's quite good starting point as documentation appendix.
 
 Test details [![codecov](https://codecov.io/gh/EscolaLMS/Templates-Email/branch/main/graph/badge.svg?token=O91FHNKI6R)](https://codecov.io/gh/EscolaLMS/Templates-Email) [![Tests PHPUnit in environments](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml)
 
