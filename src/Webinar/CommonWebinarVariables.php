@@ -28,8 +28,8 @@ abstract class CommonWebinarVariables extends EmailVariables
     {
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
-            self::VAR_WEBINAR_TITLE => $event->getConsultationTerm()->consultation->name,
-            self::VAR_WEBINAR_PROPOSED_TERM => Carbon::make($event->getConsultationTerm()->executed_at)
+            self::VAR_WEBINAR_TITLE => $event->getWebinar()->name,
+            self::VAR_WEBINAR_PROPOSED_TERM => Carbon::make($event->getWebinar()->active_to)
                 ->setTimezone($event->getUser()->current_timezone)
                 ->format('Y-m-d H:i:s'),
         ]);
