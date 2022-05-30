@@ -10,7 +10,7 @@ Package for email notifications with editable templates (for important user-rela
 [![downloads](https://img.shields.io/packagist/v/escolalms/templates-email)](https://packagist.org/packages/escolalms/templates-email)
 [![downloads](https://img.shields.io/packagist/l/escolalms/templates-email)](https://packagist.org/packages/escolalms/templates-email)
 
-## What does it do
+## Purpose
 
 This package allows you to create email notifications for events emitted in Laravel app.
 
@@ -19,12 +19,28 @@ Each notification is created as a class describing available variables that can 
 ## Installing
 
 - `composer require escolalms/templates-email`
-## Template used
+- `php artisan db:migrate`
+- `php artisan db:seed --class="EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder"`
+
+## Dependencies
+
+- [MJML](https://mjml.io/) - either as npm package ([Download](https://mjml.io/download)) or using API ([Register](https://mjml.io/api))
+
+## Usage
+
+### Defining Templates
 
 1. Create event which triggers sending email using specified template. This event must implement method getUser() returning User model from LMS Core package.
 2. Create Class defining template variables, which you will use in email notification,
 3. Associate your class describing template variables with event and channel through which notifications should be sent. Use `EscolaLms\Templates\Facades\Template::register(Event class, EscolaLms\TemplatesEmail\Core\EmailChannel::class, Variable class);`
 4. Register template in db for admin panel or used `/api/admin/templates`, better described in [Template package](https://github.com/EscolaLMS/Templates)
+
+### Mjml (pre)rendering
+
+1. Emails are written using MJML, which then is prerendered into HTML when saving a Template (so that sending an email does not call renderer for each message).
+2. To render MJML you need to either:
+    - install `mjml` npm package and configure path to executable binary in this package config `binary_path` key
+    - register to MJML API and configure api id & secret in this package config file
 
 ## Tests
 
@@ -32,16 +48,26 @@ Run `./vendor/bin/phpunit --filter 'EscolaLms\\TemplatesEmail\\Tests'` to run te
 
 Test details [![codecov](https://codecov.io/gh/EscolaLMS/Templates-Email/branch/main/graph/badge.svg?token=O91FHNKI6R)](https://codecov.io/gh/EscolaLMS/Templates-Email) [![Tests PHPUnit in environments](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml)
 
+## Usage on front end
+
 ### Admin panel
 
-**Left menu**
+#### **Left menu**
 
-![Menu](docs/templates-email/menu.png "Menu")
+![Menu](docs/menu.png "Menu")
 
-**List of templates**
+#### **List of templates**
 
-![List of templates](docs/templates-email/list.png "List of templates")
+![List of templates](docs/list.png "List of templates")
 
-**Creating/editing template**
+#### **Creating/editing template**
 
-![Creating/editing template](docs/templates-email/edit.png "Creating or editing template")
+![Creating/editing template](docs/edit.png "Creating or editing template")
+
+## Permissions
+
+No Permissions defined for this package.
+
+## Roadmap. Todo. Troubleshooting
+
+- ???
