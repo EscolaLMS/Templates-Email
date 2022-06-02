@@ -3,6 +3,8 @@
 namespace EscolaLms\TemplatesEmail\Cart;
 
 use EscolaLms\Cart\Models\Order;
+use EscolaLms\Core\Models\User;
+use EscolaLms\Templates\Events\EventWrapper;
 
 class OrderCreatedVariables extends CartVariables
 {
