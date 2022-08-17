@@ -60,6 +60,7 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
     private static function fixHtml(string $html): string
     {
         $config = HTMLPurifier_Config::createDefault();
+        $config->set('Cache.DefinitionImpl', null);
         $purifier = new HTMLPurifier($config);
         return $purifier->purify($html);
     }
