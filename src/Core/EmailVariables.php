@@ -12,14 +12,20 @@ use Illuminate\Support\Str;
 
 abstract class EmailVariables extends AbstractTemplateVariableClass implements TemplateVariableContract
 {
+    const VAR_APP_NAME     = '@VarAppName';
+
     public static function mockedVariables(?User $user = null): array
     {
-        return SettingsVariables::getSettingsValues();
+        return array_merge(SettingsVariables::getSettingsValues(), [
+            self::VAR_APP_NAME => config('app.name')
+        ]);
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        return SettingsVariables::getSettingsValues();
+        return array_merge(SettingsVariables::getSettingsValues(), [
+            self::VAR_APP_NAME => config('app.name')
+        ]);
     }
 
     public static function requiredSections(): array
