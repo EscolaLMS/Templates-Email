@@ -2,12 +2,10 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
-use DateTimeInterface;
 use EscolaLms\Consultations\Models\ConsultationUserPivot;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
-use Illuminate\Support\Carbon;
 
 abstract class CommonConsultationVariables extends EmailVariables
 {
@@ -21,26 +19,18 @@ abstract class CommonConsultationVariables extends EmailVariables
         return array_merge(parent::mockedVariables(), [
             self::VAR_USER_NAME       => $faker->name(),
             self::VAR_CONSULTATION_TITLE    => $faker->word(),
-            self::VAR_CONSULTATION_PROPOSED_TERM => $faker->dateTime(),
+            self::VAR_CONSULTATION_PROPOSED_TERM => $faker->dateTime()->format('Y-m-d H:i:s'),
         ]);
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        if ($event->getWebinar()->active_to instanceof DateTimeInterface) {
-            $proposedTerm = $event->getConsultationTerm()->executed_at;
-        } else {
-            $proposedTerm = Carbon::make($event->getConsultationTerm()->executed_at);
-        }
-
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_CONSULTATION_TITLE => $event->getConsultationTerm()->consultation->name,
-            self::VAR_CONSULTATION_PROPOSED_TERM => $proposedTerm ?
-                $proposedTerm
+            self::VAR_CONSULTATION_PROPOSED_TERM => $event->getConsultationTerm()->executed_at
                 ->setTimezone($event->getUser()->current_timezone)
-                ->format('Y-m-d H:i:s') :
-                '',
+                ->format('Y-m-d H:i:s'),
         ]);
     }
 
