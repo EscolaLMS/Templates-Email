@@ -27,7 +27,7 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        if ($event->getConsultationTerm()->active_to instanceof DateTimeInterface) {
+        if ($event->getConsultationTerm()->executed_at instanceof DateTimeInterface) {
             $proposedTerm = $event->getConsultationTerm()->executed_at;
         } else {
             $proposedTerm = Carbon::make($event->getConsultationTerm()->executed_at);
