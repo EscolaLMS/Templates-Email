@@ -2,8 +2,6 @@
 
 namespace EscolaLms\TemplatesEmail\Webinar;
 
-use Carbon\Carbon;
-use DateTimeInterface;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
@@ -30,11 +28,9 @@ abstract class CommonWebinarVariables extends EmailVariables
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_WEBINAR_TITLE => $event->getWebinar()->name,
-            self::VAR_WEBINAR_PROPOSED_TERM => $proposedTerm ?
-                $proposedTerm
+            self::VAR_WEBINAR_PROPOSED_TERM => $event->getWebinar()->active_to
                 ->setTimezone($event->getUser()->current_timezone)
-                ->format('Y-m-d H:i:s') :
-                '',
+                ->format('Y-m-d H:i:s'),
         ]);
     }
 
