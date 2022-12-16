@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
+use DateTimeInterface;
 use EscolaLms\Consultations\Models\ConsultationUserPivot;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
@@ -26,10 +27,16 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
+        if ($event->getWebinar()->active_to instanceof DateTimeInterface) {
+            $proposedTerm = $event->getConsultationTerm()->executed_at;
+        } else {
+            $proposedTerm = Carbon::make($event->getConsultationTerm()->executed_at);
+        }
+
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_CONSULTATION_TITLE => $event->getConsultationTerm()->consultation->name,
-            self::VAR_CONSULTATION_PROPOSED_TERM => Carbon::make($event->getConsultationTerm()->executed_at)
+            self::VAR_CONSULTATION_PROPOSED_TERM => $proposedTerm
                 ->setTimezone($event->getUser()->current_timezone)
                 ->format('Y-m-d H:i:s'),
         ]);
