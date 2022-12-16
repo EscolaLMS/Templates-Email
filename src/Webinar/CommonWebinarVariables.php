@@ -21,18 +21,12 @@ abstract class CommonWebinarVariables extends EmailVariables
         return array_merge(parent::mockedVariables(), [
             self::VAR_USER_NAME       => $faker->name(),
             self::VAR_WEBINAR_TITLE    => $faker->word(),
-            self::VAR_WEBINAR_PROPOSED_TERM => $faker->dateTime(),
+            self::VAR_WEBINAR_PROPOSED_TERM => $faker->dateTime()->format('Y-m-d H:i:s'),
         ]);
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        if ($event->getWebinar()->active_to instanceof DateTimeInterface) {
-            $proposedTerm = $event->getWebinar()->active_to;
-        } else {
-            $proposedTerm = Carbon::make($event->getWebinar()->active_to);
-        }
-
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_WEBINAR_TITLE => $event->getWebinar()->name,
