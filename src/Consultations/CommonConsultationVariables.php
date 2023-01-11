@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
+use Carbon\Carbon;
 use EscolaLms\Consultations\Models\ConsultationUserPivot;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
@@ -25,12 +26,20 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
+        $executedAt = $event->getConsultationTerm()->executed_at ?? '';
+        if ($executedAt) {
+            if (!$executedAt instanceof Carbon) {
+                $executedAt = Carbon::make($executedAt);
+            }
+            $executedAt = $executedAt
+                ->setTimezone($event->getUser()->current_timezone)
+                ->format('Y-m-d H:i:s');
+        }
+
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_CONSULTATION_TITLE => $event->getConsultationTerm()->consultation->name,
-            self::VAR_CONSULTATION_PROPOSED_TERM => $event->getConsultationTerm()->executed_at
-                ->setTimezone($event->getUser()->current_timezone)
-                ->format('Y-m-d H:i:s'),
+            self::VAR_CONSULTATION_PROPOSED_TERM => $executedAt,
         ]);
     }
 

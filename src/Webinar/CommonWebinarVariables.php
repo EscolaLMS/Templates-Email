@@ -6,6 +6,7 @@ use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
 use EscolaLms\Webinar\Models\Webinar;
+use Illuminate\Support\Carbon;
 
 abstract class CommonWebinarVariables extends EmailVariables
 {
@@ -25,12 +26,20 @@ abstract class CommonWebinarVariables extends EmailVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
+        $proposedTerm = $event->getWebinar()->active_to ?? '';
+        if ($proposedTerm) {
+            if (!$proposedTerm instanceof Carbon) {
+                $proposedTerm = Carbon::make($proposedTerm);
+            }
+            $proposedTerm = $proposedTerm
+                ->setTimezone($event->getUser()->current_timezone)
+                ->format('Y-m-d H:i:s');
+        }
+
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_WEBINAR_TITLE => $event->getWebinar()->name,
-            self::VAR_WEBINAR_PROPOSED_TERM => $event->getWebinar()->active_to
-                ->setTimezone($event->getUser()->current_timezone)
-                ->format('Y-m-d H:i:s'),
+            self::VAR_WEBINAR_PROPOSED_TERM => $proposedTerm,
         ]);
     }
 
