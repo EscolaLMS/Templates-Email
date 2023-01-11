@@ -28,7 +28,7 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
         }
         $email = $event->getUser()->email;
         if (method_exists($event, 'getEmail')) {
-            $email = $event->getEmail();
+            $email = $event->getEmail() ?? $email;
         }
         $mailable = new EmailMailable();
         $mailable->to($email);
