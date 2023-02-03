@@ -2,11 +2,14 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
+use EscolaLms\Consultations\Services\Contracts\ConsultationServiceContract;
 use EscolaLms\Templates\Events\EventWrapper;
+use Illuminate\Support\Facades\Log;
 
 class ReminderAboutTermVariables extends CommonConsultationVariables
 {
     const VAR_CONSULTATION_TERM_ID = '@VarConsultationTermId';
+    const VAR_JITSI_URL = '@VarJitsiUrl';
 
     public static function requiredVariables(): array
     {
@@ -27,8 +30,10 @@ class ReminderAboutTermVariables extends CommonConsultationVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
+        $consultationService = app(ConsultationServiceContract::class);
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_CONSULTATION_TERM_ID => $event->getConsultationTerm()->user->name,
+            self::VAR_JITSI_URL => $consultationService->generateJitsiUrlForEmail($event->getConsultationTerm()->getKey(), $event->getConsultationTerm()->user->getKey()),
         ]);
     }
 
