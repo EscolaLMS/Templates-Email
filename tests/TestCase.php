@@ -8,6 +8,7 @@ use EscolaLms\Auth\Models\User;
 use EscolaLms\Auth\Tests\Models\Client;
 use EscolaLms\Cart\EscolaLmsCartServiceProvider;
 use EscolaLms\Core\Tests\TestCase as CoreTestCase;
+use EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider;
 use EscolaLms\Courses\EscolaLmsCourseServiceProvider;
 use EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider;
 use EscolaLms\Scorm\EscolaLmsScormServiceProvider;
@@ -64,6 +65,9 @@ class TestCase extends CoreTestCase
         }
         if (class_exists(\EscolaLms\Courses\EscolaLmsCourseServiceProvider::class)) {
             $providers[] = EscolaLmsCourseServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider::class)) {
+            $providers[] = EscolaLmsCourseAccessServiceProvider::class;
         }
         if (class_exists(\EscolaLms\Scorm\EscolaLmsScormServiceProvider::class)) {
             $providers[] = EscolaLmsScormServiceProvider::class;

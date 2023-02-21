@@ -38,6 +38,9 @@ class CoursesTest extends TestCase
         if (!class_exists(\EscolaLms\Courses\EscolaLmsCourseServiceProvider::class)) {
             $this->markTestSkipped('Courses package not installed');
         }
+        if (!class_exists(\EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider::class)) {
+            $this->markTestSkipped('Course-Access package not installed');
+        }
         if (!class_exists(\EscolaLms\Scorm\EscolaLmsScormServiceProvider::class)) {
             $this->markTestSkipped('Scorm package not installed');
         }
