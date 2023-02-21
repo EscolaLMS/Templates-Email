@@ -12,7 +12,8 @@
   },
   "require-dev": {
     "escolalms/auth": "^0.1.54",
-    "escolalms/courses": "^0.3.8",
+    "escolalms/courses": "^0.4",
+    "escolalms/course-access": "^0.4",
     "escolalms/topic-types": "^0",
     "escolalms/payments": "^0",
     "escolalms/cart": "^0",
