@@ -13,6 +13,7 @@ use EscolaLms\Courses\EscolaLmsCourseServiceProvider;
 use EscolaLms\CsvUsers\EscolaLmsCsvUsersServiceProvider;
 use EscolaLms\Scorm\EscolaLmsScormServiceProvider;
 use EscolaLms\Settings\EscolaLmsSettingsServiceProvider;
+use EscolaLms\Tasks\EscolaLmsTasksServiceProvider;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
@@ -83,6 +84,9 @@ class TestCase extends CoreTestCase
         }
         if (class_exists(\EscolaLms\Cart\EscolaLmsCartServiceProvider::class)) {
             $providers[] = EscolaLmsCartServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\Tasks\EscolaLmsTasksServiceProvider::class)) {
+            $providers[] = EscolaLmsTasksServiceProvider::class;
         }
         return $providers;
     }

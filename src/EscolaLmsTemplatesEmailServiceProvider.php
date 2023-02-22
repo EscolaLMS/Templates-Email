@@ -10,6 +10,7 @@ use EscolaLms\Auth\Listeners\SendEmailVerificationNotification;
 use EscolaLms\Consultations\EscolaLmsConsultationsServiceProvider;
 use EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider;
 use EscolaLms\Settings\Facades\AdministrableConfig;
+use EscolaLms\Tasks\EscolaLmsTasksServiceProvider;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
@@ -21,6 +22,7 @@ use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseAccessTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\TaskTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\WebinarTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\YoutubeTemplatesServiceProvider;
@@ -83,6 +85,10 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 
         if (class_exists(EscolaLmsCourseAccessServiceProvider::class)) {
             $this->app->register(CourseAccessTemplatesServiceProvider::class);
+        }
+
+        if (class_exists(EscolaLmsTasksServiceProvider::class)) {
+            $this->app->register(TaskTemplatesEventServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);

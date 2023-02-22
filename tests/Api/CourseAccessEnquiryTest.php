@@ -30,7 +30,7 @@ class CourseAccessEnquiryTest extends TestCase
         $this->seed(CourseAccessPermissionSeeder::class);
     }
 
-    public function testAdminNotificationOnCourseEnquiryCreatedTest(): void
+    public function testAdminNotificationOnCourseEnquiryCreated(): void
     {
         Notification::fake();
         Event::fake();
