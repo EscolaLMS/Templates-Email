@@ -8,6 +8,7 @@ use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Listeners\CreatePasswordResetToken;
 use EscolaLms\Auth\Listeners\SendEmailVerificationNotification;
 use EscolaLms\Consultations\EscolaLmsConsultationsServiceProvider;
+use EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider;
 use EscolaLms\Settings\Facades\AdministrableConfig;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
@@ -17,6 +18,7 @@ use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\ConsultationTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\CourseAccessTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
@@ -77,6 +79,10 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
         if (class_exists(EscolaLmsYoutubeServiceProvider::class)) {
             $this->app->register(YoutubeTemplatesServiceProvider::class);
+        }
+
+        if (class_exists(EscolaLmsCourseAccessServiceProvider::class)) {
+            $this->app->register(CourseAccessTemplatesServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);
