@@ -3,6 +3,7 @@
 namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\Core\Tests\CreatesUsers;
+use EscolaLms\CourseAccess\Database\Seeders\CourseAccessPermissionSeeder;
 use EscolaLms\CourseAccess\Events\CourseAccessEnquiryAdminCreatedEvent;
 use EscolaLms\CourseAccess\Models\CourseAccessEnquiry;
 use EscolaLms\Courses\Models\Course;
@@ -25,6 +26,8 @@ class CourseAccessEnquiryTest extends TestCase
         if (!class_exists(\EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider::class)) {
             $this->markTestSkipped('Course-Access package not installed');
         }
+        
+        $this->seed(CourseAccessPermissionSeeder::class);
     }
 
     public function testAdminNotificationOnCourseEnquiryCreatedTest(): void
