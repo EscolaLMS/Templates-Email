@@ -10,7 +10,6 @@ use EscolaLms\Tasks\Models\Task;
 use EscolaLms\Tasks\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
-use EscolaLms\TemplatesEmail\Tasks\TaskCompleteRequestVariables;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -54,6 +53,7 @@ class TaskTest extends TestCase
             return true;
         });
 
+        /** @var Task $task */
         $task = Task::latest()->first();
         $listener = app(TemplateEventListener::class);
         $listener->handle(new TaskAssignedEvent($task->user, $task));
@@ -71,6 +71,7 @@ class TaskTest extends TestCase
 
         $student = $this->makeStudent();
 
+        /** @var Task $task */
         $task = Task::factory()
             ->state(['user_id' => $student->getKey()])
             ->create();
@@ -101,6 +102,7 @@ class TaskTest extends TestCase
         $student = $this->makeStudent();
         $admin = $this->makeAdmin();
 
+        /** @var Task $task */
         $task = Task::factory()
             ->state([
                 'created_by_id' => $admin->getKey(),

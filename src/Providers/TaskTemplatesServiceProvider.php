@@ -5,11 +5,13 @@ namespace EscolaLms\TemplatesEmail\Providers;
 use EscolaLms\Tasks\Events\TaskAssignedEvent;
 use EscolaLms\Tasks\Events\TaskCompleteRequestEvent;
 use EscolaLms\Tasks\Events\TaskCompleteUserConfirmationEvent;
+use EscolaLms\Tasks\Events\TaskOverdueEvent;
 use EscolaLms\Templates\Facades\Template;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Tasks\TaskAssignedVariables;
 use EscolaLms\TemplatesEmail\Tasks\TaskCompleteRequestVariables;
 use EscolaLms\TemplatesEmail\Tasks\TaskCompleteUserConfirmationVariables;
+use EscolaLms\TemplatesEmail\Tasks\TaskOverdueVariables;
 use Illuminate\Support\ServiceProvider;
 
 class TaskTemplatesServiceProvider extends ServiceProvider
@@ -32,6 +34,12 @@ class TaskTemplatesServiceProvider extends ServiceProvider
             TaskCompleteRequestEvent::class,
             EmailChannel::class,
             TaskCompleteRequestVariables::class
+        );
+
+        Template::register(
+            TaskOverdueEvent::class,
+            EmailChannel::class,
+            TaskOverdueVariables::class
         );
     }
 }
