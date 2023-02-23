@@ -4,11 +4,13 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\Tasks\Database\Seeders\TaskPermissionSeeder;
 use EscolaLms\Tasks\Events\TaskAssignedEvent;
+use EscolaLms\Tasks\Events\TaskCompleteRequestEvent;
 use EscolaLms\Tasks\Events\TaskCompleteUserConfirmationEvent;
 use EscolaLms\Tasks\Models\Task;
 use EscolaLms\Tasks\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
+use EscolaLms\TemplatesEmail\Tasks\TaskCompleteRequestVariables;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -88,6 +90,39 @@ class TaskTest extends TestCase
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
             $this->assertEquals(__('Task ":task" completed', ['task' => $task->title]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($student->email));
+            return true;
+        });
+    }
+
+    public function testNotificationSentToCreatorWhenStudentCompletesTask(): void
+    {
+        Event::fake([TaskCompleteRequestEvent::class]);
+
+        $student = $this->makeStudent();
+        $admin = $this->makeAdmin();
+
+        $task = Task::factory()
+            ->state([
+                'created_by_id' => $admin->getKey(),
+                'user_id' => $student->getKey(),
+            ])
+            ->create();
+
+        $this->actingAs($student, 'api')
+            ->postJson('api/tasks/complete/' . $task->getKey())
+            ->assertOk();
+
+        Event::assertDispatched(function (TaskCompleteRequestEvent $event) use ($admin) {
+            $this->assertEquals($admin->getKey(), $event->getTask()->created_by_id);
+            return true;
+        });
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new TaskCompleteRequestEvent($task->createdBy, $task));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $admin) {
+            $this->assertEquals(__(':student_name has completed the task', ['assignee_name' =>  $student->name]), $mailable->subject);
+            $this->assertTrue($mailable->hasTo($admin->email));
             return true;
         });
     }
