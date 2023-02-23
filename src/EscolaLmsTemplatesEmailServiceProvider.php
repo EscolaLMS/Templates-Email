@@ -22,7 +22,7 @@ use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseAccessTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
-use EscolaLms\TemplatesEmail\Providers\TaskTemplatesEventServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\TaskTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\WebinarTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\YoutubeTemplatesServiceProvider;
@@ -88,7 +88,7 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
 
         if (class_exists(EscolaLmsTasksServiceProvider::class)) {
-            $this->app->register(TaskTemplatesEventServiceProvider::class);
+            $this->app->register(TaskTemplatesServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);

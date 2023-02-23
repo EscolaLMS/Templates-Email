@@ -8,7 +8,7 @@ use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Tasks\TaskAssignedVariables;
 use Illuminate\Support\ServiceProvider;
 
-class TaskTemplatesEventServiceProvider extends ServiceProvider
+class TaskTemplatesServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
