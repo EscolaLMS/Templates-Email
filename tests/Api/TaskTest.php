@@ -123,7 +123,7 @@ class TaskTest extends TestCase
         $listener->handle(new TaskCompleteRequestEvent($task->createdBy, $task));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $admin) {
-            $this->assertEquals(__(':student_name has completed the task', ['assignee_name' =>  $student->name]), $mailable->subject);
+            $this->assertEquals(__(':assignee_name has completed the task', ['assignee_name' =>  $student->name]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($admin->email));
             return true;
         });

@@ -7,7 +7,7 @@ class TaskCompleteRequestVariables  extends CommonTasksVariables
     public static function defaultSectionsContent(): array
     {
         return [
-            'title' => __(':student_name has completed the task', [
+            'title' => __(':assignee_name has completed the task', [
                 'assignee_name' =>  self::VAR_ASSIGNEE_NAME,
             ]),
             'content' => self::wrapWithMjml(__('<h1>Hello :user_name!</h1><p>:assignee_name has been marked task ":task" as completed.</p>', [
