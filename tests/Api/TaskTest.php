@@ -4,6 +4,7 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\Tasks\Database\Seeders\TaskPermissionSeeder;
 use EscolaLms\Tasks\Events\TaskAssignedEvent;
+use EscolaLms\Tasks\Events\TaskCompleteUserConfirmationEvent;
 use EscolaLms\Tasks\Models\Task;
 use EscolaLms\Tasks\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
@@ -57,6 +58,35 @@ class TaskTest extends TestCase
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
             $this->assertEquals(__('Task ":task" assigned', ['task' => $task->title]), $mailable->subject);
+            $this->assertTrue($mailable->hasTo($student->email));
+            return true;
+        });
+    }
+
+    public function testNotificationOnTaskCompletedByAdmin(): void
+    {
+        Event::fake([TaskCompleteUserConfirmationEvent::class]);
+
+        $student = $this->makeStudent();
+
+        $task = Task::factory()
+            ->state(['user_id' => $student->getKey()])
+            ->create();
+
+        $this->actingAs($this->makeAdmin(), 'api')
+            ->postJson('api/admin/tasks/complete/' . $task->getKey())
+            ->assertOk();
+
+        Event::assertDispatched(function (TaskCompleteUserConfirmationEvent $event) use ($student) {
+            $this->assertEquals($student->getKey(), $event->getUser()->getKey());
+            return true;
+        });
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new TaskCompleteUserConfirmationEvent($task->user, $task));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
+            $this->assertEquals(__('Task ":task" completed', ['task' => $task->title]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($student->email));
             return true;
         });
