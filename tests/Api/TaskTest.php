@@ -43,8 +43,6 @@ class TaskTest extends TestCase
             ->postJson('api/admin/tasks', [
                 'title' => $this->faker->title,
                 'user_id' => $student->getKey(),
-                'related_type' => null,
-                'related_id' => null,
             ])
             ->assertCreated();
 
