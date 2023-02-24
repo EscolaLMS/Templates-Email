@@ -25,8 +25,8 @@ abstract class CommonConsultationVariables extends EmailVariables
             self::VAR_USER_NAME       => $faker->name(),
             self::VAR_CONSULTATION_TITLE    => $faker->word(),
             self::VAR_CONSULTATION_PROPOSED_TERM => $date->format('Y-m-d H:i:s'),
-            self::VAR_CONSULTATION_DATE_TIME_START => Carbon::parse($date)->toISOString(),
-            self::VAR_CONSULTATION_DATE_TIME_END => Carbon::parse($date)->addHour()->toISOString(),
+            self::VAR_CONSULTATION_DATE_TIME_START => Carbon::parse($date)->format('Ymd\THisp'),
+            self::VAR_CONSULTATION_DATE_TIME_END => Carbon::parse($date)->addHour()->format('Ymd\THisp'),
         ]);
     }
 
@@ -48,8 +48,8 @@ abstract class CommonConsultationVariables extends EmailVariables
             self::VAR_USER_NAME    => $event->getUser()->name,
             self::VAR_CONSULTATION_TITLE => $event->getConsultationTerm()->consultation->name,
             self::VAR_CONSULTATION_PROPOSED_TERM => $executedAt->format('Y-m-d H:i:s'),
-            self::VAR_CONSULTATION_DATE_TIME_START => $executedAt->toISOString(),
-            self::VAR_CONSULTATION_DATE_TIME_END => $executedTo->toISOString(),
+            self::VAR_CONSULTATION_DATE_TIME_START => $executedAt->format('Ymd\THisp'),
+            self::VAR_CONSULTATION_DATE_TIME_END => $executedTo->format('Ymd\THisp'),
         ]);
     }
 
