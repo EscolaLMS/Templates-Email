@@ -6,6 +6,7 @@ use EscolaLms\Tasks\Database\Seeders\TaskPermissionSeeder;
 use EscolaLms\Tasks\Events\TaskAssignedEvent;
 use EscolaLms\Tasks\Events\TaskCompleteRequestEvent;
 use EscolaLms\Tasks\Events\TaskCompleteUserConfirmationEvent;
+use EscolaLms\Tasks\Events\TaskIncompleteEvent;
 use EscolaLms\Tasks\Models\Task;
 use EscolaLms\Tasks\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
@@ -125,6 +126,35 @@ class TaskTest extends TestCase
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $admin) {
             $this->assertEquals(__(':assignee_name has completed the task', ['assignee_name' =>  $student->name]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($admin->email));
+            return true;
+        });
+    }
+
+    public function testNotificationOnTaskMarkedIncomplete(): void
+    {
+        Event::fake([TaskIncompleteEvent::class]);
+
+        $student = $this->makeStudent();
+
+        /** @var Task $task */
+        $task = Task::factory()
+            ->state(['user_id' => $student->getKey()])
+            ->create();
+
+        $this->actingAs($this->makeAdmin(), 'api')
+            ->postJson('api/admin/tasks/incomplete/' . $task->getKey())
+            ->assertOk();
+
+        Event::assertDispatched(function (TaskIncompleteEvent $event) use ($task) {
+            return $event->getUser()->getKey() === $task->user_id && $event->getTask()->getKey() === $task->getKey();
+        });
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new TaskIncompleteEvent($task->user, $task));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
+            $this->assertEquals(__('Incomplete task ":task"', ['task' =>  $task->title]), $mailable->subject);
+            $this->assertTrue($mailable->hasTo($student->email));
             return true;
         });
     }
