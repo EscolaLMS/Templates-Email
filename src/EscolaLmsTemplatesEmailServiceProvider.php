@@ -7,6 +7,7 @@ use EscolaLms\Auth\Events\AccountRegistered;
 use EscolaLms\Auth\Events\ForgotPassword;
 use EscolaLms\Auth\Listeners\CreatePasswordResetToken;
 use EscolaLms\Auth\Listeners\SendEmailVerificationNotification;
+use EscolaLms\ConsultationAccess\EscolaLmsConsultationAccessServiceProvider;
 use EscolaLms\Consultations\EscolaLmsConsultationsServiceProvider;
 use EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider;
 use EscolaLms\Settings\Facades\AdministrableConfig;
@@ -17,6 +18,7 @@ use EscolaLms\TemplatesEmail\Core\EmailChannel;
 use EscolaLms\TemplatesEmail\Providers\AssignWithoutAccountTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\ConsultationAccessTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\ConsultationTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CartTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\CourseAccessTemplatesServiceProvider;
@@ -89,6 +91,10 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 
         if (class_exists(EscolaLmsTasksServiceProvider::class)) {
             $this->app->register(TaskTemplatesServiceProvider::class);
+        }
+
+        if (class_exists(EscolaLmsConsultationAccessServiceProvider::class)) {
+            $this->app->register(ConsultationAccessTemplatesServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);
