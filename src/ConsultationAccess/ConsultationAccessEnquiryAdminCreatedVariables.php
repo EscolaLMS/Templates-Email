@@ -8,7 +8,6 @@ use EscolaLms\Templates\Events\EventWrapper;
 class ConsultationAccessEnquiryAdminCreatedVariables extends CommonConsultationAccessEnquiryVariables
 {
     const VAR_STUDENT_NAME   = '@VarStudentName';
-
     const VAR_PROPOSED_TERMS = '@VarProposedTerms';
 
     public static function mockedVariables(?User $user = null): array
