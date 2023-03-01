@@ -1,31 +1,31 @@
 <?php
 
-namespace EscolaLms\TemplatesEmail\CourseAccess;
+namespace EscolaLms\TemplatesEmail\ConsultationAccess;
 
+use EscolaLms\ConsultationAccess\Models\ConsultationAccessEnquiry;
 use EscolaLms\Core\Models\User;
-use EscolaLms\CourseAccess\Models\CourseAccessEnquiry;
 use EscolaLms\Templates\Events\EventWrapper;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
 
-abstract class CommonCourseAccessEnquiryVariables extends EmailVariables
+abstract class CommonConsultationAccessEnquiryVariables extends EmailVariables
 {
-    const VAR_USER_NAME       = '@VarUserName';
-    const VAR_COURSE_TITLE    = '@VarCourseTitle';
+    const VAR_USER_NAME         = '@VarUserName';
+    const VAR_CONSULTATION_NAME = '@VarConsultationName';
 
     public static function mockedVariables(?User $user = null): array
     {
         $faker = \Faker\Factory::create();
         return array_merge(parent::mockedVariables(), [
-            self::VAR_USER_NAME       => $faker->name(),
-            self::VAR_COURSE_TITLE    => $faker->word(),
+            self::VAR_USER_NAME            => $faker->name(),
+            self::VAR_CONSULTATION_NAME    => $faker->word(),
         ]);
     }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
         return array_merge(parent::variablesFromEvent($event), [
-            self::VAR_USER_NAME    => $event->getCourseAccessEnquiry()->user->name,
-            self::VAR_COURSE_TITLE => $event->getCourseAccessEnquiry()->course->title,
+            self::VAR_USER_NAME         => $event->getUser()->name,
+            self::VAR_CONSULTATION_NAME => $event->getConsultationAccessEnquiry()->consultation->name,
         ]);
     }
 
@@ -33,7 +33,7 @@ abstract class CommonCourseAccessEnquiryVariables extends EmailVariables
     {
         return [
             self::VAR_USER_NAME,
-            self::VAR_COURSE_TITLE,
+            self::VAR_CONSULTATION_NAME,
         ];
     }
 
@@ -42,7 +42,7 @@ abstract class CommonCourseAccessEnquiryVariables extends EmailVariables
         if ($sectionKey === 'content') {
             return [
                 self::VAR_USER_NAME,
-                self::VAR_COURSE_TITLE,
+                self::VAR_CONSULTATION_NAME,
             ];
         }
         return [];
@@ -50,6 +50,6 @@ abstract class CommonCourseAccessEnquiryVariables extends EmailVariables
 
     public static function assignableClass(): ?string
     {
-        return CourseAccessEnquiry::class;
+        return ConsultationAccessEnquiry::class;
     }
 }
