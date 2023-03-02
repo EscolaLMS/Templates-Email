@@ -7,7 +7,9 @@ use EscolaLms\Tasks\Events\TaskAssignedEvent;
 use EscolaLms\Tasks\Events\TaskCompleteRequestEvent;
 use EscolaLms\Tasks\Events\TaskCompleteUserConfirmationEvent;
 use EscolaLms\Tasks\Events\TaskIncompleteEvent;
+use EscolaLms\Tasks\Events\TaskNoteCreatedEvent;
 use EscolaLms\Tasks\Models\Task;
+use EscolaLms\Tasks\Models\TaskNote;
 use EscolaLms\Tasks\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
@@ -124,7 +126,7 @@ class TaskTest extends TestCase
         $listener->handle(new TaskCompleteRequestEvent($task->createdBy, $task));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $admin) {
-            $this->assertEquals(__(':assignee_name has completed the task', ['assignee_name' =>  $student->name]), $mailable->subject);
+            $this->assertEquals(__(':assignee_name has completed the task', ['assignee_name' => $student->name]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($admin->email));
             return true;
         });
@@ -153,7 +155,48 @@ class TaskTest extends TestCase
         $listener->handle(new TaskIncompleteEvent($task->user, $task));
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
-            $this->assertEquals(__('Incomplete task ":task"', ['task' =>  $task->title]), $mailable->subject);
+            $this->assertEquals(__('Incomplete task ":task"', ['task' => $task->title]), $mailable->subject);
+            $this->assertTrue($mailable->hasTo($student->email));
+            return true;
+        });
+    }
+
+    public function testNotificationOnTaskNoteCreated(): void
+    {
+        Event::fake([TaskNoteCreatedEvent::class]);
+
+        $student = $this->makeStudent();
+        $admin = $this->makeAdmin();
+
+        /** @var Task $task */
+        $task = Task::factory()
+            ->state([
+                'user_id' => $student->getKey(),
+                'created_by_id' => $admin->getKey(),
+            ])
+            ->create();
+
+        $this->actingAs($admin, 'api')
+            ->postJson('api/admin/tasks/notes', [
+                'note' => $this->faker->text,
+                'task_id' => $task->getKey(),
+            ])
+            ->assertCreated();
+
+        Event::assertDispatched(function (TaskNoteCreatedEvent $event) use ($task, $student) {
+            $this->assertEquals($student->getKey(), $event->getUser()->getKey());
+            $this->assertEquals($task->getKey(), $event->getTaskNote()->task_id);
+            return true;
+        });
+
+        /** @var TaskNote $task */
+        $note = TaskNote::latest()->first();
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new TaskNoteCreatedEvent($task->user, $note));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($student, $task) {
+            $this->assertEquals(__('New note for the ":task" task', ['task' => $task->title]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($student->email));
             return true;
         });
