@@ -25,8 +25,8 @@ abstract class CommonConsultationVariables extends EmailVariables
             self::VAR_USER_NAME       => $faker->name(),
             self::VAR_CONSULTATION_TITLE    => $faker->word(),
             self::VAR_CONSULTATION_PROPOSED_TERM => $date->format('Y-m-d H:i:s'),
-            self::VAR_CONSULTATION_DATE_TIME_START => Carbon::parse($date)->format('Ymd\THisp'),
-            self::VAR_CONSULTATION_DATE_TIME_END => Carbon::parse($date)->addHour()->format('Ymd\THisp'),
+            self::VAR_CONSULTATION_DATE_TIME_START => Carbon::parse($date)->format('Ymd\THis'),
+            self::VAR_CONSULTATION_DATE_TIME_END => Carbon::parse($date)->addHour()->format('Ymd\THis'),
         ]);
     }
 
