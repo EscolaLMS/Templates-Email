@@ -4,14 +4,17 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 
 use EscolaLms\ConsultationAccess\Database\Seeders\ConsultationAccessPermissionSeeder;
 use EscolaLms\ConsultationAccess\Events\ConsultationAccessEnquiryAdminCreatedEvent;
+use EscolaLms\ConsultationAccess\Events\ConsultationAccessEnquiryApprovedEvent;
 use EscolaLms\ConsultationAccess\Events\ConsultationAccessEnquiryDisapprovedEvent;
 use EscolaLms\ConsultationAccess\Models\Consultation;
 use EscolaLms\ConsultationAccess\Models\ConsultationAccessEnquiry;
+use EscolaLms\ConsultationAccess\Models\ConsultationAccessEnquiryProposedTerm;
 use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +22,7 @@ use Illuminate\Support\Facades\Notification;
 
 class ConsultationAccessTest extends TestCase
 {
-    use CreatesUsers, DatabaseTransactions;
+    use CreatesUsers, DatabaseTransactions, WithFaker;
 
     public function setUp(): void
     {
@@ -96,6 +99,38 @@ class ConsultationAccessTest extends TestCase
 
         Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($enquiry) {
             $this->assertEquals(__('Consultation access enquiry disapproved'), $mailable->subject);
+            $this->assertTrue($mailable->hasTo($enquiry->user->email));
+            return true;
+        });
+    }
+
+    public function testNotificationOnConsultationEnquiryApproved(): void
+    {
+        Notification::fake();
+        Event::fake();
+        Mail::fake();
+
+        /** @var ConsultationAccessEnquiryProposedTerm $proposedTerm */
+        $proposedTerm = ConsultationAccessEnquiryProposedTerm::factory()->create();
+        $meetingLink = $this->faker->url;
+        $this->actingAs($this->makeAdmin(), 'api')
+            ->postJson('api/admin/consultation-access-enquiries/approve/' . $proposedTerm->getKey(), [
+                'meeting_link' => $meetingLink,
+            ])
+            ->assertOk();
+
+        $enquiry = $proposedTerm->consultationAccessEnquiry;
+
+        Event::assertDispatched(function (ConsultationAccessEnquiryApprovedEvent $event) use ($enquiry) {
+            $this->assertEquals($event->getConsultationAccessEnquiry()->getKey(), $enquiry->getKey());
+            return true;
+        });
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new ConsultationAccessEnquiryApprovedEvent($enquiry->user, $enquiry));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($enquiry) {
+            $this->assertEquals(__('Approved term ":consultation"', ['consultation' => $enquiry->consultation->name]), $mailable->subject);
             $this->assertTrue($mailable->hasTo($enquiry->user->email));
             return true;
         });
