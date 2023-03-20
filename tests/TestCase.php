@@ -20,6 +20,7 @@ use EscolaLms\TemplatesEmail\Database\Seeders\TemplatesEmailSeeder;
 use EscolaLms\TemplatesEmail\EscolaLmsTemplatesEmailServiceProvider;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
+use EscolaLms\TopicTypeProject\EscolaLmsTopicTypeProjectServiceProvider;
 use EscolaLms\Youtube\EscolaLmsYoutubeServiceProvider;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Config;
@@ -91,6 +92,9 @@ class TestCase extends CoreTestCase
         }
         if (class_exists(\EscolaLms\ConsultationAccess\EscolaLmsConsultationAccessServiceProvider::class)) {
             $providers[] = EscolaLmsConsultationAccessServiceProvider::class;
+        }
+        if (class_exists(\EscolaLms\TopicTypeProject\EscolaLmsTopicTypeProjectServiceProvider::class)) {
+            $providers[] = EscolaLmsTopicTypeProjectServiceProvider::class;
         }
         return $providers;
     }
