@@ -4,6 +4,7 @@ namespace EscolaLms\TemplatesEmail\ConsultationAccess;
 
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
+use Illuminate\Support\Carbon;
 
 class ConsultationAccessEnquiryApprovedVariables extends CommonConsultationAccessEnquiryVariables
 {
@@ -40,8 +41,14 @@ class ConsultationAccessEnquiryApprovedVariables extends CommonConsultationAcces
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
+        $executedAt = $event->getConsultationAccessEnquiry()->consultationUser->executed_at;
+        if (!$executedAt instanceof Carbon) {
+            $executedAt = Carbon::make($executedAt);
+        }
+        $executedAt = $executedAt->setTimezone($event->getUser()->current_timezone)->format('Y-m-d H:i');
+
         return array_merge(parent::variablesFromEvent($event), [
-            self::VAR_APPROVED_TERM => $event->getConsultationAccessEnquiry()->consultationUser->executed_at,
+            self::VAR_APPROVED_TERM => $executedAt,
             self::VAR_MEETING_LINK => $event->getConsultationAccessEnquiry()->meeting_link,
         ]);
     }
