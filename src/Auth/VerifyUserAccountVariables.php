@@ -2,6 +2,7 @@
 
 namespace EscolaLms\TemplatesEmail\Auth;
 
+use EscolaLms\Core\Models\User;
 use EscolaLms\TemplatesEmail\Core\EmailVariables;
 use EscolaLms\Templates\Events\EventWrapper;
 use Illuminate\Support\Facades\Lang;
@@ -9,6 +10,15 @@ use Illuminate\Support\Facades\Lang;
 class VerifyUserAccountVariables extends EmailVariables
 {
     const VAR_REGISTERED_USER_NAME = '@VarRegisteredUserName';
+
+    public static function mockedVariables(?User $user = null): array
+    {
+        $faker = \Faker\Factory::create();
+
+        return array_merge(parent::mockedVariables($user), [
+            self::VAR_REGISTERED_USER_NAME => $faker->name,
+        ]);
+    }
 
     public static function variablesFromEvent(EventWrapper $event): array
     {

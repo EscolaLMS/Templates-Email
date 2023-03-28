@@ -3,6 +3,7 @@
 namespace EscolaLms\TemplatesEmail\Consultations;
 
 use EscolaLms\Consultations\Services\Contracts\ConsultationServiceContract;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 
 class ReminderTrainerAboutTermVariables extends CommonConsultationVariables
@@ -14,6 +15,15 @@ class ReminderTrainerAboutTermVariables extends CommonConsultationVariables
     {
         return array_merge(parent::requiredVariables(), [
             self::VAR_CONSULTATION_USER_NAME,
+        ]);
+    }
+
+    public static function mockedVariables(?User $user = null): array
+    {
+        $faker = \Faker\Factory::create();
+        return array_merge(parent::mockedVariables(), [
+            self::VAR_CONSULTATION_USER_NAME => $faker->name,
+            self::VAR_JITSI_URL => $faker->url,
         ]);
     }
 
