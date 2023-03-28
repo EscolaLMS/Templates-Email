@@ -2,11 +2,21 @@
 
 namespace EscolaLms\TemplatesEmail\Consultations;
 
+use Carbon\Carbon;
+use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Events\EventWrapper;
 
 class ReportTermVariables extends CommonConsultationVariables
 {
     const VAR_CONSULTATION_BUYER_NAME    = '@VarConsultationBuyerName';
+
+    public static function mockedVariables(?User $user = null): array
+    {
+        $faker = \Faker\Factory::create();
+        return array_merge(parent::mockedVariables(), [
+            self::VAR_CONSULTATION_BUYER_NAME => $faker->name,
+        ]);
+    }
 
     public static function requiredVariables(): array
     {

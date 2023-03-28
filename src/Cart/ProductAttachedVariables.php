@@ -21,6 +21,7 @@ class ProductAttachedVariables extends CartVariables
         return array_merge(parent::mockedVariables(), [
             self::VAR_USER_NAME     => $faker->name(),
             self::VAR_PRODUCT_NAME  => $faker->word(),
+            self::VAR_PRODUCTABLES  => $faker->word(),
         ]);
     }
 
