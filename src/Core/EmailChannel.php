@@ -5,6 +5,7 @@ namespace EscolaLms\TemplatesEmail\Core;
 use EscolaLms\Core\Models\User;
 use EscolaLms\Templates\Contracts\TemplateChannelContract;
 use EscolaLms\Templates\Core\AbstractTemplateChannelClass;
+use EscolaLms\Templates\Core\SettingsVariables;
 use EscolaLms\Templates\Core\TemplateSectionSchema;
 use EscolaLms\Templates\Enums\TemplateSectionTypeEnum;
 use EscolaLms\Templates\Events\EventWrapper;
@@ -81,6 +82,10 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
     public static function processTemplateAfterSaving(Template $template): Template
     {
         $content = $template->sections()->where('key', 'content')->first()->content;
+
+        foreach (SettingsVariables::settings() as $key => $variable) {
+            $content = Str::replace($key, $variable['value'], $content);
+        }
 
         if (Str::contains($content, '<mjml>')) {
             $contentHtml = self::renderMjml($content);

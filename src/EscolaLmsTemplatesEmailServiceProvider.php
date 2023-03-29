@@ -11,10 +11,12 @@ use EscolaLms\ConsultationAccess\EscolaLmsConsultationAccessServiceProvider;
 use EscolaLms\Consultations\EscolaLmsConsultationsServiceProvider;
 use EscolaLms\CourseAccess\EscolaLmsCourseAccessServiceProvider;
 use EscolaLms\Settings\Facades\AdministrableConfig;
+use EscolaLms\Settings\Models\Setting;
 use EscolaLms\Tasks\EscolaLmsTasksServiceProvider;
 use EscolaLms\Templates\EscolaLmsTemplatesServiceProvider;
 use EscolaLms\Templates\Repository\Contracts\TemplateRepositoryContract;
 use EscolaLms\TemplatesEmail\Core\EmailChannel;
+use EscolaLms\TemplatesEmail\Observers\SettingObserver;
 use EscolaLms\TemplatesEmail\Providers\AssignWithoutAccountTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesEventServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\AuthTemplatesServiceProvider;
@@ -145,6 +147,8 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
                 ));
             }
         );
+
+        Setting::observe(SettingObserver::class);
     }
 
     public function bootForConsole()
