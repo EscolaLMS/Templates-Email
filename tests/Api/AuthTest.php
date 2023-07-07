@@ -5,6 +5,7 @@ namespace EscolaLms\TemplatesEmail\Tests\Api;
 use EscolaLms\Auth\Database\Seeders\AuthPermissionSeeder;
 use EscolaLms\Auth\Enums\SettingStatusEnum;
 use EscolaLms\Auth\EscolaLmsAuthServiceProvider;
+use EscolaLms\Auth\Events\AccountDeletionRequested;
 use EscolaLms\Auth\Events\AccountMustBeEnableByAdmin;
 use EscolaLms\Auth\Events\AccountRegistered;
 use EscolaLms\Auth\Events\ForgotPassword;
@@ -146,6 +147,34 @@ class AuthTest extends TestCase
             $this->assertTrue($mailable->hasTo($admin->email));
             $this->assertFalse($mailable->hasTo($newUser->email));
 
+            return true;
+        });
+    }
+
+    public function testInitProfileDeletion(): void
+    {
+        $this->seed(AuthPermissionSeeder::class);
+
+        Mail::fake();
+        Event::fake();
+        Notification::fake();
+
+        $user = $this->makeStudent();
+
+        $this
+            ->actingAs($user, 'api')
+            ->postJson('/api/profile/delete/init', ['return_url' => 'https://escolalms.com/delete-account'])
+            ->assertOk();
+
+        Event::assertDispatched(AccountDeletionRequested::class);
+        Notification::assertNotSentTo($user, VerifyEmail::class);
+
+        $listener = app(TemplateEventListener::class);
+        $listener->handle(new AccountDeletionRequested($user, 'https://escolalms.com/delete-account'));
+
+        Mail::assertSent(EmailMailable::class, function (EmailMailable $mailable) use ($user) {
+            $this->assertEquals('Confirmation of account deletion', $mailable->subject);
+            $this->assertTrue($mailable->hasTo($user->email));
             return true;
         });
     }
