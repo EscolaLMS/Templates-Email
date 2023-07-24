@@ -44,30 +44,10 @@ Each notification is created as a class describing available variables that can 
 
 ## Tests
 
-Run `./vendor/bin/phpunit --filter 'EscolaLms\\TemplatesEmail\\Tests'` to run tests. See [tests](tests) folder as it contains a basic implementation of Variable (or Template description) class with minimal customisation - a quite good starting point for creating your own.
+Run `./vendor/bin/phpunit --filter 'EscolaLms\\TemplatesEmail\\Tests'` to run tests. See [tests](https://github.com/EscolaLMS/Templates-Email/tree/main/tests) folder as it contains a basic implementation of Variable (or Template description) class with minimal customisation - a quite good starting point for creating your own.
 
 Test details [![codecov](https://codecov.io/gh/EscolaLMS/Templates-Email/branch/main/graph/badge.svg?token=O91FHNKI6R)](https://codecov.io/gh/EscolaLMS/Templates-Email) [![Tests PHPUnit in environments](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml/badge.svg)](https://github.com/EscolaLMS/Templates-Email/actions/workflows/test.yml)
-
-## Usage on front end
-
-### Admin panel
-
-#### **Left menu**
-
-![Menu](docs/menu.png "Menu")
-
-#### **List of templates**
-
-![List of templates](docs/list.png "List of templates")
-
-#### **Creating/editing template**
-
-![Creating/editing template](docs/edit.png "Creating or editing template")
 
 ## Permissions
 
 No Permissions defined for this package.
-
-## Roadmap. Todo. Troubleshooting
-
-- ???
