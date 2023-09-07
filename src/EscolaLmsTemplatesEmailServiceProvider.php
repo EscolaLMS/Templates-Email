@@ -29,12 +29,14 @@ use EscolaLms\TemplatesEmail\Providers\CsvUsersTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TaskTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TemplateServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\TopicTypeProjectTemplatesServiceProvider;
+use EscolaLms\TemplatesEmail\Providers\VideoTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\WebinarTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Providers\YoutubeTemplatesServiceProvider;
 use EscolaLms\TemplatesEmail\Rules\MjmlRule;
 use EscolaLms\TemplatesEmail\Services\Contracts\MjmlServiceContract;
 use EscolaLms\TemplatesEmail\Services\MjmlService;
 use EscolaLms\TopicTypeProject\EscolaLmsTopicTypeProjectServiceProvider;
+use EscolaLms\Video\EscolaLmsVideoServiceProvider;
 use EscolaLms\Webinar\EscolaLmsWebinarServiceProvider;
 use EscolaLms\Youtube\EscolaLmsYoutubeServiceProvider;
 use Illuminate\Support\ServiceProvider;
@@ -103,6 +105,10 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 
         if (class_exists(EscolaLmsTopicTypeProjectServiceProvider::class)) {
             $this->app->register(TopicTypeProjectTemplatesServiceProvider::class);
+        }
+
+        if (class_exists(EscolaLmsVideoServiceProvider::class)) {
+            $this->app->register(VideoTemplatesServiceProvider::class);
         }
 
         $this->app->register(TemplateServiceProvider::class);
