@@ -27,6 +27,7 @@
     "escolalms/tasks": "^0",
     "escolalms/topic-type-project": "^0",
     "escolalms/assign-without-account": "^0",
+    "escolalms/video": "^0",
     "orchestra/testbench": "^5.0|^6.0",
     "phpunit/phpunit": "^9.0"
   },
