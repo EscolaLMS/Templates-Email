@@ -4,7 +4,7 @@ namespace EscolaLms\TemplatesEmail\Tests\Feature;
 
 use EscolaLms\Tasks\Events\TaskOverdueEvent;
 use EscolaLms\Tasks\Models\Task;
-use EscolaLms\Tasks\Tests\CreatesUsers;
+use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -15,6 +15,15 @@ use Illuminate\Support\Facades\Mail;
 class TaskTest extends TestCase
 {
     use CreatesUsers, DatabaseTransactions;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (!class_exists(\EscolaLms\Tasks\EscolaLmsTasksServiceProvider::class)) {
+            $this->markTestSkipped('Task package not installed');
+        }
+    }
 
     public function testNotificationSentWhenTaskIsOverdue(): void
     {

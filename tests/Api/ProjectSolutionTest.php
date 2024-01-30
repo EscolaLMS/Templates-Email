@@ -7,7 +7,7 @@ use EscolaLms\Courses\Enum\CourseStatusEnum;
 use EscolaLms\Courses\Models\Course;
 use EscolaLms\Courses\Models\Lesson;
 use EscolaLms\Courses\Models\Topic;
-use EscolaLms\Tasks\Tests\CreatesUsers;
+use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;

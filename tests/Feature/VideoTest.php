@@ -21,6 +21,14 @@ class VideoTest extends TestCase
 {
     use DatabaseTransactions, CreatesUsers;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (!class_exists(\EscolaLms\Video\EscolaLmsVideoServiceProvider::class)) {
+            $this->markTestSkipped('Video package not installed');
+        }
+    }
     public function testNotificationSentWhenVideoProcessingStarted(): void
     {
         Mail::fake();

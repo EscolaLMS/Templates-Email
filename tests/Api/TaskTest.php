@@ -10,7 +10,7 @@ use EscolaLms\Tasks\Events\TaskIncompleteEvent;
 use EscolaLms\Tasks\Events\TaskNoteCreatedEvent;
 use EscolaLms\Tasks\Models\Task;
 use EscolaLms\Tasks\Models\TaskNote;
-use EscolaLms\Tasks\Tests\CreatesUsers;
+use EscolaLms\Core\Tests\CreatesUsers;
 use EscolaLms\Templates\Listeners\TemplateEventListener;
 use EscolaLms\TemplatesEmail\Core\EmailMailable;
 use EscolaLms\TemplatesEmail\Tests\TestCase;
