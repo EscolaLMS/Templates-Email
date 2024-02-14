@@ -8,7 +8,7 @@
     "escolalms/templates": "^0.2.1",
     "ezyang/htmlpurifier": "^4.13",
     "laravel/framework": ">=8.0",
-    "qferr/mjml-php": "^1.1"
+    "qferr/mjml-php": "^2"
   },
   "require-dev": {
     "escolalms/auth": "^0.2",
