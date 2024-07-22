@@ -73,8 +73,11 @@ class EmailChannel extends AbstractTemplateChannelClass implements TemplateChann
     public static function sections(): Collection
     {
         return new Collection([
+            // @phpstan-ignore-next-line
             new TemplateSectionSchema('title', TemplateSectionTypeEnum::SECTION_TEXT(), true),
+            // @phpstan-ignore-next-line
             new TemplateSectionSchema('content', TemplateSectionTypeEnum::SECTION_MJML(), true),
+            // @phpstan-ignore-next-line
             new TemplateSectionSchema('contentHtml', TemplateSectionTypeEnum::SECTION_HTML(), false, true),
         ]);
     }

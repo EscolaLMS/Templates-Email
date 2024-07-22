@@ -20,7 +20,7 @@ class MjmlService implements MjmlServiceContract
                 throw new Exception('Missing MJML API id and/or secret');
             }
 
-            $renderer = new ApiRenderer($apiId, $apiSecret);
+            $renderer = new ApiRenderer($apiId);
         } else {
             $renderer = new BinaryRenderer();
         }
