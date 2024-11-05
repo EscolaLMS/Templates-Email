@@ -32,7 +32,7 @@ abstract class CommonConsultationVariables extends EmailVariables
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        $executedAt = $event->getConsultationTerm()->executed_at ?? '';
+        $executedAt = $event->getConsultationUserTerm() ? $event->getConsultationUserTerm()->executed_at : ($event->getConsultationTerm()->executed_at ?? '');
         if ($executedAt) {
             if (!$executedAt instanceof Carbon) {
                 $executedAt = Carbon::make($executedAt);
