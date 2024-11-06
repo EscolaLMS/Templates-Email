@@ -40,9 +40,10 @@ class ReminderTrainerAboutTermVariables extends CommonConsultationVariables
     public static function variablesFromEvent(EventWrapper $event): array
     {
         $consultationService = app(ConsultationServiceContract::class);
+        $executedAt = $event->getConsultationUserTerm() ?? ($event->getConsultationTerm()->executed_at ?? '');
         return array_merge(parent::variablesFromEvent($event), [
             self::VAR_CONSULTATION_USER_NAME => $event->getConsultationTerm()->user->name,
-            self::VAR_JITSI_URL => $consultationService->generateJitsiUrlForEmail($event->getConsultationTerm()->getKey(), $event->getConsultationTerm()->user->getKey()),
+            self::VAR_JITSI_URL => $consultationService->generateJitsiUrlForEmail($event->getConsultationTerm()->getKey(), $event->getConsultationTerm()->user->getKey(), $executedAt),
         ]);
     }
 
