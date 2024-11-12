@@ -41,7 +41,7 @@ class ConsultationAccessEnquiryApprovedVariables extends CommonConsultationAcces
 
     public static function variablesFromEvent(EventWrapper $event): array
     {
-        $executedAt = $event->getConsultationAccessEnquiry()->consultationUser->executed_at;
+        $executedAt = $event->getConsultationAccessEnquiry()->consultationUserTerm ? $event->getConsultationAccessEnquiry()->consultationUserTerm->executed_at : $event->getConsultationAccessEnquiry()->consultationUser->executed_at;
         if (!$executedAt instanceof Carbon) {
             $executedAt = Carbon::make($executedAt);
         }
