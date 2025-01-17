@@ -113,9 +113,9 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
 
         $this->app->register(TemplateServiceProvider::class);
 
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'templates-email');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'templates-email');
         $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/templates-email'),
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/templates-email'),
         ]);
     }
 
@@ -128,6 +128,7 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
 
         if (class_exists(\EscolaLms\Settings\Facades\AdministrableConfig::class)) {
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_url', ['required', 'bool'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.use_api', ['required', 'bool'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_id', ['required', 'string'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_secret', ['required', 'string'], false);
