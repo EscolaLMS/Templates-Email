@@ -128,7 +128,7 @@ class EscolaLmsTemplatesEmailServiceProvider extends ServiceProvider
         }
 
         if (class_exists(\EscolaLms\Settings\Facades\AdministrableConfig::class)) {
-            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_url', ['required', 'bool'], false);
+            AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_url', ['required', 'string'], '');
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.use_api', ['required', 'bool'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_id', ['required', 'string'], false);
             AdministrableConfig::registerConfig(self::CONFIG_KEY . '.mjml.api_secret', ['required', 'string'], false);
