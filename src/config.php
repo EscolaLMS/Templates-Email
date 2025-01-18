@@ -2,6 +2,7 @@
 
 return [
     'mjml' => [
+        'api_url'          => env('MJML_API_URL', false),
         'use_api'          => env('MJML_USE_API', false),
         //
         'binary_path'      => env('MJML_BINARY_PATH'),
